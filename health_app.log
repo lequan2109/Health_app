@@ -143,3 +143,535 @@
 2025-10-16 23:57:52,920 - INFO - Refreshed bmi chart for 6months
 2025-10-16 23:58:01,260 - INFO - Refreshed activity chart for 6months
 2025-10-16 23:58:10,492 - INFO - Refreshed weekly_summary chart for 6months
+2025-10-17 09:04:12,497 - INFO - Database initialized successfully
+2025-10-18 09:55:51,595 - INFO - Database initialized successfully
+2025-10-18 09:56:05,316 - INFO - User authenticated: quan123
+2025-10-18 09:56:05,316 - INFO - User logged in: quan123
+2025-10-18 09:56:08,612 - INFO - Dashboard data refreshed
+2025-10-18 09:56:08,676 - INFO - Dashboard data refreshed
+2025-10-18 09:56:24,248 - INFO - Refreshed weight_trend chart for week
+2025-10-18 09:56:25,334 - INFO - Refreshed history data: weight from 2025-09-18 to 2025-10-18
+2025-10-18 09:56:26,681 - INFO - Refreshed weight_trend chart for week
+2025-10-18 09:56:33,889 - INFO - Refreshed bmi chart for week
+2025-10-18 09:56:37,123 - INFO - Refreshed activity chart for week
+2025-10-18 09:56:40,126 - INFO - Refreshed weekly_summary chart for week
+2025-10-18 09:56:40,831 - INFO - Refreshed weekly_summary chart for week
+2025-10-18 09:56:49,671 - INFO - Dashboard data refreshed
+2025-11-20 09:12:18,249 - INFO - Database initialized successfully
+2025-11-20 09:13:33,572 - INFO - User created: quan
+2025-11-20 09:13:39,885 - INFO - User authenticated: quan
+2025-11-20 09:13:39,886 - INFO - User logged in: quan
+2025-11-20 09:13:43,620 - INFO - Dashboard data refreshed
+2025-11-20 09:13:43,683 - INFO - Dashboard data refreshed
+2025-11-20 09:13:51,704 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:13:54,701 - INFO - Dashboard data refreshed
+2025-11-20 09:14:25,633 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-20 09:14:25,645 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-20 09:14:25,752 - INFO - Dashboard data refreshed
+2025-11-20 09:14:26,077 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:14:26,079 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:14:26,093 - INFO - Activity intensity set to: medium
+2025-11-20 09:14:26,246 - INFO - Dashboard data refreshed
+2025-11-20 09:14:26,401 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:14:26,403 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:14:29,436 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:14:32,498 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:14:40,299 - INFO - Dashboard data refreshed
+2025-11-20 09:15:05,226 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,244 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,246 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,267 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-20 09:15:05,287 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-20 09:15:05,300 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,314 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-20 09:15:05,314 - INFO - Generated weight measurement: 65.0kg, BMI: 22.5
+2025-11-20 09:15:05,326 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-20 09:15:05,338 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-20 09:15:05,339 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-20 09:15:05,354 - INFO - Generated weight measurement: 65.5kg, BMI: 22.7
+2025-11-20 09:15:05,364 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,364 - INFO - Generated weight measurement: 65.4kg, BMI: 22.6
+2025-11-20 09:15:05,376 - INFO - Generated weight measurement: 65.4kg, BMI: 22.6
+2025-11-20 09:15:05,377 - INFO - Generated activity: Yoga, 57min, 234.8cal
+2025-11-20 09:15:05,377 - INFO - Generated weight measurement: 65.7kg, BMI: 22.7
+2025-11-20 09:15:05,378 - INFO - Generated weight measurement: 65.6kg, BMI: 22.7
+2025-11-20 09:15:05,379 - INFO - Generated activity: Gym, 37min, 234.1cal
+2025-11-20 09:15:05,379 - INFO - Generated weight measurement: 65.6kg, BMI: 22.7
+2025-11-20 09:15:05,380 - INFO - Generated activity: Yoga, 37min, 140.0cal
+2025-11-20 09:15:05,380 - INFO - Generated weight measurement: 65.5kg, BMI: 22.7
+2025-11-20 09:15:05,381 - INFO - Generated weight measurement: 65.3kg, BMI: 22.6
+2025-11-20 09:15:05,382 - INFO - Generated weight measurement: 65.7kg, BMI: 22.7
+2025-11-20 09:15:05,391 - INFO - Generated weight measurement: 65.3kg, BMI: 22.6
+2025-11-20 09:15:05,392 - INFO - Generated weight measurement: 65.0kg, BMI: 22.5
+2025-11-20 09:15:05,400 - INFO - Generated weight measurement: 64.9kg, BMI: 22.5
+2025-11-20 09:15:05,410 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,418 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-20 09:15:05,427 - INFO - Generated weight measurement: 64.7kg, BMI: 22.4
+2025-11-20 09:15:05,427 - INFO - Generated activity: Yoga, 43min, 187.8cal
+2025-11-20 09:15:05,428 - INFO - Generated weight measurement: 64.5kg, BMI: 22.3
+2025-11-20 09:15:05,436 - INFO - Generated weight measurement: 64.4kg, BMI: 22.3
+2025-11-20 09:15:05,446 - INFO - Generated weight measurement: 64.3kg, BMI: 22.2
+2025-11-20 09:15:05,447 - INFO - Generated activity: Yoga, 54min, 223.2cal
+2025-11-20 09:15:05,459 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:05,505 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:05,520 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:05,575 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-20 09:15:05,607 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-20 09:15:05,636 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:05,675 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-20 09:15:05,688 - INFO - Weight record added: user=2, weight=65.0, bmi=22.5
+2025-11-20 09:15:05,728 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-20 09:15:05,762 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-20 09:15:05,774 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-20 09:15:05,806 - INFO - Weight record added: user=2, weight=65.5, bmi=22.7
+2025-11-20 09:15:05,840 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:05,853 - INFO - Weight record added: user=2, weight=65.4, bmi=22.6
+2025-11-20 09:15:05,889 - INFO - Weight record added: user=2, weight=65.4, bmi=22.6
+2025-11-20 09:15:05,901 - INFO - Activity added: user=2, type=Yoga, duration=57
+2025-11-20 09:15:05,916 - INFO - Weight record added: user=2, weight=65.7, bmi=22.7
+2025-11-20 09:15:05,929 - INFO - Weight record added: user=2, weight=65.6, bmi=22.7
+2025-11-20 09:15:05,940 - INFO - Activity added: user=2, type=Gym, duration=37
+2025-11-20 09:15:05,953 - INFO - Weight record added: user=2, weight=65.6, bmi=22.7
+2025-11-20 09:15:05,966 - INFO - Activity added: user=2, type=Yoga, duration=37
+2025-11-20 09:15:05,978 - INFO - Weight record added: user=2, weight=65.5, bmi=22.7
+2025-11-20 09:15:05,991 - INFO - Weight record added: user=2, weight=65.3, bmi=22.6
+2025-11-20 09:15:06,003 - INFO - Weight record added: user=2, weight=65.7, bmi=22.7
+2025-11-20 09:15:06,039 - INFO - Weight record added: user=2, weight=65.3, bmi=22.6
+2025-11-20 09:15:06,050 - INFO - Weight record added: user=2, weight=65.0, bmi=22.5
+2025-11-20 09:15:06,084 - INFO - Weight record added: user=2, weight=64.9, bmi=22.5
+2025-11-20 09:15:06,115 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:06,151 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-20 09:15:06,187 - INFO - Weight record added: user=2, weight=64.7, bmi=22.4
+2025-11-20 09:15:06,200 - INFO - Activity added: user=2, type=Yoga, duration=43
+2025-11-20 09:15:06,216 - INFO - Weight record added: user=2, weight=64.5, bmi=22.3
+2025-11-20 09:15:06,251 - INFO - Weight record added: user=2, weight=64.4, bmi=22.3
+2025-11-20 09:15:06,283 - INFO - Weight record added: user=2, weight=64.3, bmi=22.2
+2025-11-20 09:15:06,295 - INFO - Activity added: user=2, type=Yoga, duration=54
+2025-11-20 09:15:06,361 - INFO - Dashboard data refreshed
+2025-11-20 09:15:06,551 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:15:06,557 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:15:09,269 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:15:15,467 - INFO - Refreshed history data: activity from 2025-10-21 to 2025-11-20
+2025-11-20 09:15:17,548 - INFO - Refreshed history data: all from 2025-10-21 to 2025-11-20
+2025-11-20 09:16:07,681 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:16:19,767 - INFO - Refreshed weight_trend chart for 6months
+2025-11-20 09:16:22,594 - INFO - Refreshed bmi chart for 6months
+2025-11-20 09:16:34,360 - INFO - Refreshed activity chart for 6months
+2025-11-20 09:16:46,611 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-20 09:17:00,285 - INFO - Refreshed history data: all from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:01,753 - INFO - Refreshed history data: activity from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:02,452 - INFO - Refreshed history data: weight from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:04,637 - INFO - Refreshed history data: activity from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:05,727 - INFO - Refreshed history data: all from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:07,233 - INFO - Refreshed history data: all from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:17,537 - INFO - Dashboard data refreshed
+2025-11-20 09:17:22,901 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-20 09:17:24,169 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-20 09:17:29,327 - INFO - Refreshed history data: all from 2025-10-21 to 2025-11-20
+2025-11-20 09:17:37,172 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-20 09:33:42,744 - INFO - Database initialized successfully
+2025-11-20 09:33:49,031 - INFO - User authenticated: quan
+2025-11-20 09:33:49,032 - INFO - User logged in: quan
+2025-11-20 09:33:50,313 - ERROR - Error refreshing dashboard: 'float' object is not subscriptable
+2025-11-20 09:33:50,323 - ERROR - Error refreshing dashboard: 'float' object is not subscriptable
+2025-11-20 09:34:00,217 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:34:07,776 - INFO - Refreshed weekly_summary chart for week
+2025-11-20 09:34:13,628 - INFO - Refreshed weekly_summary chart for week
+2025-11-20 09:34:22,866 - INFO - Refreshed weight_trend chart for week
+2025-11-20 09:34:24,826 - INFO - Refreshed weight_trend chart for month
+2025-11-20 09:34:26,121 - INFO - Refreshed weight_trend chart for 3months
+2025-11-20 09:34:27,983 - INFO - Refreshed activity chart for 3months
+2025-11-20 09:34:29,591 - INFO - Refreshed activity chart for 6months
+2025-11-20 09:34:33,137 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-20 09:34:43,009 - ERROR - Error refreshing dashboard: 'float' object is not subscriptable
+2025-11-22 10:09:48,328 - INFO - Database initialized successfully
+2025-11-22 10:10:10,688 - INFO - User authenticated: quan
+2025-11-22 10:10:10,688 - INFO - User logged in: quan
+2025-11-22 10:10:14,073 - INFO - Dashboard data refreshed
+2025-11-22 10:10:14,122 - INFO - Dashboard data refreshed
+2025-11-22 10:11:01,395 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:11:06,678 - INFO - Refreshed bmi chart for week
+2025-11-22 10:11:09,677 - INFO - Refreshed activity chart for week
+2025-11-22 10:11:12,860 - INFO - Refreshed weekly_summary chart for week
+2025-11-22 10:11:20,527 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-22 10:11:29,067 - INFO - Refreshed activity chart for 6months
+2025-11-22 10:11:33,843 - INFO - Refreshed bmi chart for 6months
+2025-11-22 10:11:38,137 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:11:52,131 - INFO - Dashboard data refreshed
+2025-11-22 10:15:25,481 - INFO - Weight record added: user=2, weight=50.0, bmi=17.3
+2025-11-22 10:15:27,745 - INFO - Dashboard data refreshed
+2025-11-22 10:15:27,879 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:15:27,882 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:16,492 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-22 10:16:16,503 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-22 10:16:16,560 - INFO - Dashboard data refreshed
+2025-11-22 10:16:16,694 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:16,696 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:18,889 - INFO - Activity intensity set to: low
+2025-11-22 10:16:19,007 - INFO - Dashboard data refreshed
+2025-11-22 10:16:19,138 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:19,140 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:21,243 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:21,254 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:21,316 - INFO - Dashboard data refreshed
+2025-11-22 10:16:21,447 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:21,449 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:21,465 - INFO - Activity intensity set to: low
+2025-11-22 10:16:21,466 - INFO - Generated activity: Gym, 58min, 267.5cal
+2025-11-22 10:16:21,474 - INFO - Activity added: user=2, type=Gym, duration=58
+2025-11-22 10:16:21,512 - INFO - Dashboard data refreshed
+2025-11-22 10:16:21,637 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:21,639 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:31,799 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,800 - INFO - Generated activity: Gym, 46min, 217.6cal
+2025-11-22 10:16:31,801 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,802 - INFO - Generated weight measurement: 64.7kg, BMI: 22.4
+2025-11-22 10:16:31,812 - INFO - Generated weight measurement: 64.7kg, BMI: 22.4
+2025-11-22 10:16:31,813 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-22 10:16:31,815 - INFO - Generated activity: Yoga, 54min, 175.9cal
+2025-11-22 10:16:31,817 - INFO - Generated weight measurement: 64.9kg, BMI: 22.5
+2025-11-22 10:16:31,831 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-22 10:16:31,832 - INFO - Generated weight measurement: 64.7kg, BMI: 22.4
+2025-11-22 10:16:31,833 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,833 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,834 - INFO - Generated activity: Yoga, 22min, 63.5cal
+2025-11-22 10:16:31,835 - INFO - Generated weight measurement: 64.9kg, BMI: 22.5
+2025-11-22 10:16:31,836 - INFO - Generated activity: Gym, 66min, 321.7cal
+2025-11-22 10:16:31,836 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,853 - INFO - Generated weight measurement: 64.7kg, BMI: 22.4
+2025-11-22 10:16:31,867 - INFO - Generated weight measurement: 65.0kg, BMI: 22.5
+2025-11-22 10:16:31,869 - INFO - Generated activity: Gym, 52min, 245.9cal
+2025-11-22 10:16:31,870 - INFO - Generated weight measurement: 64.6kg, BMI: 22.4
+2025-11-22 10:16:31,881 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-22 10:16:31,892 - INFO - Generated weight measurement: 65.0kg, BMI: 22.5
+2025-11-22 10:16:31,902 - INFO - Generated weight measurement: 64.8kg, BMI: 22.4
+2025-11-22 10:16:31,906 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-22 10:16:31,906 - INFO - Generated weight measurement: 65.3kg, BMI: 22.6
+2025-11-22 10:16:31,906 - INFO - Generated weight measurement: 65.1kg, BMI: 22.5
+2025-11-22 10:16:31,913 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-22 10:16:31,913 - INFO - Generated activity: Yoga, 29min, 87.3cal
+2025-11-22 10:16:31,914 - INFO - Generated weight measurement: 65.5kg, BMI: 22.7
+2025-11-22 10:16:31,914 - INFO - Generated activity: Yoga, 30min, 87.2cal
+2025-11-22 10:16:31,914 - INFO - Generated weight measurement: 65.2kg, BMI: 22.6
+2025-11-22 10:16:31,915 - INFO - Generated activity: Gym, 39min, 195.1cal
+2025-11-22 10:16:31,915 - INFO - Generated weight measurement: 65.5kg, BMI: 22.7
+2025-11-22 10:16:31,919 - INFO - Generated weight measurement: 65.5kg, BMI: 22.7
+2025-11-22 10:16:31,922 - INFO - Generated weight measurement: 65.4kg, BMI: 22.6
+2025-11-22 10:16:31,922 - INFO - Generated activity: Gym, 38min, 203.8cal
+2025-11-22 10:16:31,923 - INFO - Generated weight measurement: 65.4kg, BMI: 22.6
+2025-11-22 10:16:31,928 - INFO - Generated weight measurement: 65.4kg, BMI: 22.6
+2025-11-22 10:16:31,928 - INFO - Generated weight measurement: 65.7kg, BMI: 22.7
+2025-11-22 10:16:31,940 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:31,949 - INFO - Activity added: user=2, type=Gym, duration=46
+2025-11-22 10:16:31,954 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:31,963 - INFO - Weight record added: user=2, weight=64.7, bmi=22.4
+2025-11-22 10:16:31,980 - INFO - Weight record added: user=2, weight=64.7, bmi=22.4
+2025-11-22 10:16:31,988 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-22 10:16:31,997 - INFO - Activity added: user=2, type=Yoga, duration=54
+2025-11-22 10:16:32,004 - INFO - Weight record added: user=2, weight=64.9, bmi=22.5
+2025-11-22 10:16:32,022 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-22 10:16:32,032 - INFO - Weight record added: user=2, weight=64.7, bmi=22.4
+2025-11-22 10:16:32,040 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:32,051 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:32,056 - INFO - Activity added: user=2, type=Yoga, duration=22
+2025-11-22 10:16:32,066 - INFO - Weight record added: user=2, weight=64.9, bmi=22.5
+2025-11-22 10:16:32,072 - INFO - Activity added: user=2, type=Gym, duration=66
+2025-11-22 10:16:32,080 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:32,100 - INFO - Weight record added: user=2, weight=64.7, bmi=22.4
+2025-11-22 10:16:32,122 - INFO - Weight record added: user=2, weight=65.0, bmi=22.5
+2025-11-22 10:16:32,132 - INFO - Activity added: user=2, type=Gym, duration=52
+2025-11-22 10:16:32,139 - INFO - Weight record added: user=2, weight=64.6, bmi=22.4
+2025-11-22 10:16:32,160 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-22 10:16:32,181 - INFO - Weight record added: user=2, weight=65.0, bmi=22.5
+2025-11-22 10:16:32,203 - INFO - Weight record added: user=2, weight=64.8, bmi=22.4
+2025-11-22 10:16:32,226 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-22 10:16:32,235 - INFO - Weight record added: user=2, weight=65.3, bmi=22.6
+2025-11-22 10:16:32,246 - INFO - Weight record added: user=2, weight=65.1, bmi=22.5
+2025-11-22 10:16:32,266 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-22 10:16:32,273 - INFO - Activity added: user=2, type=Yoga, duration=29
+2025-11-22 10:16:32,283 - INFO - Weight record added: user=2, weight=65.5, bmi=22.7
+2025-11-22 10:16:32,292 - INFO - Activity added: user=2, type=Yoga, duration=30
+2025-11-22 10:16:32,301 - INFO - Weight record added: user=2, weight=65.2, bmi=22.6
+2025-11-22 10:16:32,310 - INFO - Activity added: user=2, type=Gym, duration=39
+2025-11-22 10:16:32,318 - INFO - Weight record added: user=2, weight=65.5, bmi=22.7
+2025-11-22 10:16:32,339 - INFO - Weight record added: user=2, weight=65.5, bmi=22.7
+2025-11-22 10:16:32,362 - INFO - Weight record added: user=2, weight=65.4, bmi=22.6
+2025-11-22 10:16:32,370 - INFO - Activity added: user=2, type=Gym, duration=38
+2025-11-22 10:16:32,379 - INFO - Weight record added: user=2, weight=65.4, bmi=22.6
+2025-11-22 10:16:32,401 - INFO - Weight record added: user=2, weight=65.4, bmi=22.6
+2025-11-22 10:16:32,410 - INFO - Weight record added: user=2, weight=65.7, bmi=22.7
+2025-11-22 10:16:32,474 - INFO - Dashboard data refreshed
+2025-11-22 10:16:32,609 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:32,611 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:35,044 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:16:48,763 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:59,029 - INFO - Generated weight measurement: 66.0kg, BMI: 22.8
+2025-11-22 10:16:59,039 - INFO - Generated weight measurement: 65.9kg, BMI: 22.8
+2025-11-22 10:16:59,039 - INFO - Generated weight measurement: 65.6kg, BMI: 22.7
+2025-11-22 10:16:59,049 - INFO - Generated weight measurement: 66.0kg, BMI: 22.8
+2025-11-22 10:16:59,057 - INFO - Generated weight measurement: 66.1kg, BMI: 22.9
+2025-11-22 10:16:59,057 - INFO - Generated activity: Yoga, 32min, 98.3cal
+2025-11-22 10:16:59,058 - INFO - Generated weight measurement: 66.1kg, BMI: 22.9
+2025-11-22 10:16:59,058 - INFO - Generated weight measurement: 65.9kg, BMI: 22.8
+2025-11-22 10:16:59,066 - INFO - Generated weight measurement: 65.9kg, BMI: 22.8
+2025-11-22 10:16:59,071 - INFO - Generated weight measurement: 66.0kg, BMI: 22.8
+2025-11-22 10:16:59,072 - INFO - Generated activity: Yoga, 58min, 161.4cal
+2025-11-22 10:16:59,072 - INFO - Generated weight measurement: 66.0kg, BMI: 22.8
+2025-11-22 10:16:59,082 - INFO - Generated weight measurement: 66.3kg, BMI: 22.9
+2025-11-22 10:16:59,083 - INFO - Generated activity: Yoga, 29min, 94.8cal
+2025-11-22 10:16:59,083 - INFO - Generated weight measurement: 66.1kg, BMI: 22.9
+2025-11-22 10:16:59,090 - INFO - Generated weight measurement: 66.3kg, BMI: 22.9
+2025-11-22 10:16:59,100 - INFO - Generated weight measurement: 66.6kg, BMI: 23.0
+2025-11-22 10:16:59,100 - INFO - Generated activity: Gym, 34min, 184.6cal
+2025-11-22 10:16:59,101 - INFO - Generated weight measurement: 66.5kg, BMI: 23.0
+2025-11-22 10:16:59,105 - INFO - Generated weight measurement: 66.5kg, BMI: 23.0
+2025-11-22 10:16:59,113 - INFO - Generated weight measurement: 66.7kg, BMI: 23.1
+2025-11-22 10:16:59,118 - INFO - Generated weight measurement: 66.8kg, BMI: 23.1
+2025-11-22 10:16:59,123 - INFO - Generated weight measurement: 66.9kg, BMI: 23.1
+2025-11-22 10:16:59,123 - INFO - Generated activity: Gym, 43min, 210.0cal
+2025-11-22 10:16:59,124 - INFO - Generated weight measurement: 67.0kg, BMI: 23.2
+2025-11-22 10:16:59,129 - INFO - Generated weight measurement: 66.8kg, BMI: 23.1
+2025-11-22 10:16:59,134 - INFO - Generated weight measurement: 66.5kg, BMI: 23.0
+2025-11-22 10:16:59,134 - INFO - Generated activity: Gym, 81min, 439.3cal
+2025-11-22 10:16:59,135 - INFO - Generated weight measurement: 66.6kg, BMI: 23.0
+2025-11-22 10:16:59,139 - INFO - Generated weight measurement: 66.7kg, BMI: 23.1
+2025-11-22 10:16:59,139 - INFO - Generated weight measurement: 66.7kg, BMI: 23.1
+2025-11-22 10:16:59,144 - INFO - Generated weight measurement: 66.7kg, BMI: 23.1
+2025-11-22 10:16:59,149 - INFO - Generated weight measurement: 66.9kg, BMI: 23.1
+2025-11-22 10:16:59,153 - INFO - Generated weight measurement: 66.7kg, BMI: 23.1
+2025-11-22 10:16:59,153 - INFO - Generated weight measurement: 66.5kg, BMI: 23.0
+2025-11-22 10:16:59,153 - INFO - Generated weight measurement: 66.3kg, BMI: 22.9
+2025-11-22 10:16:59,163 - INFO - Weight record added: user=2, weight=66.0, bmi=22.8
+2025-11-22 10:16:59,184 - INFO - Weight record added: user=2, weight=65.9, bmi=22.8
+2025-11-22 10:16:59,192 - INFO - Weight record added: user=2, weight=65.6, bmi=22.7
+2025-11-22 10:16:59,222 - INFO - Weight record added: user=2, weight=66.0, bmi=22.8
+2025-11-22 10:16:59,242 - INFO - Weight record added: user=2, weight=66.1, bmi=22.9
+2025-11-22 10:16:59,251 - INFO - Activity added: user=2, type=Yoga, duration=32
+2025-11-22 10:16:59,259 - INFO - Weight record added: user=2, weight=66.1, bmi=22.9
+2025-11-22 10:16:59,269 - INFO - Weight record added: user=2, weight=65.9, bmi=22.8
+2025-11-22 10:16:59,291 - INFO - Weight record added: user=2, weight=65.9, bmi=22.8
+2025-11-22 10:16:59,314 - INFO - Weight record added: user=2, weight=66.0, bmi=22.8
+2025-11-22 10:16:59,321 - INFO - Activity added: user=2, type=Yoga, duration=58
+2025-11-22 10:16:59,330 - INFO - Weight record added: user=2, weight=66.0, bmi=22.8
+2025-11-22 10:16:59,350 - INFO - Weight record added: user=2, weight=66.3, bmi=22.9
+2025-11-22 10:16:59,357 - INFO - Activity added: user=2, type=Yoga, duration=29
+2025-11-22 10:16:59,367 - INFO - Weight record added: user=2, weight=66.1, bmi=22.9
+2025-11-22 10:16:59,389 - INFO - Weight record added: user=2, weight=66.3, bmi=22.9
+2025-11-22 10:16:59,410 - INFO - Weight record added: user=2, weight=66.6, bmi=23.0
+2025-11-22 10:16:59,418 - INFO - Activity added: user=2, type=Gym, duration=34
+2025-11-22 10:16:59,427 - INFO - Weight record added: user=2, weight=66.5, bmi=23.0
+2025-11-22 10:16:59,449 - INFO - Weight record added: user=2, weight=66.5, bmi=23.0
+2025-11-22 10:16:59,471 - INFO - Weight record added: user=2, weight=66.7, bmi=23.1
+2025-11-22 10:16:59,513 - INFO - Weight record added: user=2, weight=66.8, bmi=23.1
+2025-11-22 10:16:59,534 - INFO - Weight record added: user=2, weight=66.9, bmi=23.1
+2025-11-22 10:16:59,541 - INFO - Activity added: user=2, type=Gym, duration=43
+2025-11-22 10:16:59,553 - INFO - Weight record added: user=2, weight=67.0, bmi=23.2
+2025-11-22 10:16:59,569 - INFO - Weight record added: user=2, weight=66.8, bmi=23.1
+2025-11-22 10:16:59,586 - INFO - Weight record added: user=2, weight=66.5, bmi=23.0
+2025-11-22 10:16:59,591 - INFO - Activity added: user=2, type=Gym, duration=81
+2025-11-22 10:16:59,601 - INFO - Weight record added: user=2, weight=66.6, bmi=23.0
+2025-11-22 10:16:59,626 - INFO - Weight record added: user=2, weight=66.7, bmi=23.1
+2025-11-22 10:16:59,636 - INFO - Weight record added: user=2, weight=66.7, bmi=23.1
+2025-11-22 10:16:59,658 - INFO - Weight record added: user=2, weight=66.7, bmi=23.1
+2025-11-22 10:16:59,679 - INFO - Weight record added: user=2, weight=66.9, bmi=23.1
+2025-11-22 10:16:59,704 - INFO - Weight record added: user=2, weight=66.7, bmi=23.1
+2025-11-22 10:16:59,715 - INFO - Weight record added: user=2, weight=66.5, bmi=23.0
+2025-11-22 10:16:59,722 - INFO - Weight record added: user=2, weight=66.3, bmi=22.9
+2025-11-22 10:16:59,773 - INFO - Dashboard data refreshed
+2025-11-22 10:16:59,903 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:16:59,904 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:17:03,358 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:17:05,167 - INFO - Dashboard data refreshed
+2025-11-22 10:17:17,779 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 10:17:22,289 - INFO - Refreshed bmi chart for 6months
+2025-11-22 10:17:34,685 - INFO - Chart saved as: health_chart_20251122_101732.png
+2025-11-22 10:17:37,822 - INFO - Refreshed activity chart for 6months
+2025-11-22 10:17:48,753 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-22 10:18:08,592 - INFO - Refreshed weekly_summary chart for month
+2025-11-22 10:18:14,818 - INFO - Refreshed weekly_summary chart for 3months
+2025-11-22 10:18:19,409 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:18:29,828 - INFO - Weight record added: user=2, weight=50.0, bmi=17.3
+2025-11-22 10:18:31,351 - INFO - Dashboard data refreshed
+2025-11-22 10:18:31,489 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:18:31,491 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:18:36,152 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:18:41,509 - INFO - Refreshed bmi chart for week
+2025-11-22 10:18:45,229 - INFO - Refreshed activity chart for week
+2025-11-22 10:18:48,287 - INFO - Refreshed weekly_summary chart for week
+2025-11-22 10:19:01,328 - INFO - Dashboard data refreshed
+2025-11-22 10:19:41,634 - INFO - Weight record added: user=2, weight=60.0, bmi=20.8
+2025-11-22 10:19:43,338 - INFO - Dashboard data refreshed
+2025-11-22 10:19:43,540 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:19:43,542 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:19:51,974 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:20:02,095 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:20:19,696 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:20:26,996 - INFO - Refreshed weight_trend chart for month
+2025-11-22 10:20:35,787 - INFO - Refreshed bmi chart for month
+2025-11-22 10:20:45,060 - INFO - Refreshed bmi chart for 3months
+2025-11-22 10:20:49,724 - INFO - Refreshed bmi chart for 6months
+2025-11-22 10:20:52,296 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-22 10:21:25,549 - INFO - Database initialized successfully
+2025-11-22 10:21:30,043 - INFO - User authenticated: quan
+2025-11-22 10:21:30,044 - INFO - User logged in: quan
+2025-11-22 10:21:31,211 - INFO - Dashboard data refreshed
+2025-11-22 10:21:31,245 - INFO - Dashboard data refreshed
+2025-11-22 10:21:42,643 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:21:43,236 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:21:46,023 - INFO - Dashboard data refreshed
+2025-11-22 10:22:25,047 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:22:26,891 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:02,932 - INFO - Database initialized successfully
+2025-11-22 10:26:07,948 - INFO - User authenticated: quan
+2025-11-22 10:26:07,949 - INFO - User logged in: quan
+2025-11-22 10:26:09,063 - INFO - Dashboard data refreshed
+2025-11-22 10:26:09,090 - INFO - Dashboard data refreshed
+2025-11-22 10:26:12,548 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:26:13,694 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:22,226 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:28,636 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:29,872 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:31,596 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:33,328 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:34,382 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:35,519 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:39,713 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 10:26:44,732 - INFO - Refreshed weight_trend chart for week
+2025-11-22 10:26:47,767 - INFO - Dashboard data refreshed
+2025-11-22 13:19:46,836 - INFO - Database initialized successfully
+2025-11-22 13:19:55,868 - INFO - User authenticated: quan
+2025-11-22 13:19:55,868 - INFO - User logged in: quan
+2025-11-22 13:19:58,720 - INFO - Dashboard data refreshed
+2025-11-22 13:19:58,779 - INFO - Dashboard data refreshed
+2025-11-22 13:20:24,769 - INFO - Refreshed weight_trend chart for week
+2025-11-22 13:20:26,063 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 13:20:32,406 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 13:20:32,929 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 13:20:35,439 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 13:20:37,025 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 13:20:38,801 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 13:52:21,721 - INFO - Dashboard data refreshed
+2025-11-22 13:56:33,361 - INFO - Dashboard data refreshed
+2025-11-22 14:01:04,341 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:01:10,558 - INFO - Dashboard data refreshed
+2025-11-22 14:05:15,764 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:05:17,042 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:05:39,327 - INFO - Dashboard data refreshed
+2025-11-22 14:06:59,132 - INFO - Database initialized successfully
+2025-11-22 14:07:03,916 - INFO - User authenticated: quan
+2025-11-22 14:07:03,917 - INFO - User logged in: quan
+2025-11-22 14:07:05,190 - INFO - Dashboard data refreshed
+2025-11-22 14:07:05,216 - INFO - Dashboard data refreshed
+2025-11-22 14:08:12,055 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:09:34,323 - INFO - Dashboard data refreshed
+2025-11-22 14:10:23,264 - INFO - Database initialized successfully
+2025-11-22 14:10:27,268 - INFO - User authenticated: quan
+2025-11-22 14:10:27,269 - INFO - User logged in: quan
+2025-11-22 14:10:28,505 - INFO - Dashboard data refreshed
+2025-11-22 14:10:28,534 - INFO - Dashboard data refreshed
+2025-11-22 14:11:01,947 - INFO - Database initialized successfully
+2025-11-22 14:11:06,003 - INFO - User authenticated: quan
+2025-11-22 14:11:06,004 - INFO - User logged in: quan
+2025-11-22 14:11:07,196 - INFO - Dashboard data refreshed
+2025-11-22 14:11:07,226 - INFO - Dashboard data refreshed
+2025-11-22 14:11:09,677 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:12:53,697 - INFO - Database initialized successfully
+2025-11-22 14:12:58,029 - INFO - User authenticated: quan
+2025-11-22 14:12:58,029 - INFO - User logged in: quan
+2025-11-22 14:12:59,474 - INFO - Dashboard data refreshed
+2025-11-22 14:12:59,512 - INFO - Dashboard data refreshed
+2025-11-22 14:16:11,773 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:20:12,358 - INFO - Database initialized successfully
+2025-11-22 14:20:17,054 - INFO - User authenticated: quan
+2025-11-22 14:20:17,055 - INFO - User logged in: quan
+2025-11-22 14:20:18,537 - INFO - Dashboard data refreshed
+2025-11-22 14:20:18,581 - INFO - Dashboard data refreshed
+2025-11-22 14:20:20,771 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:20:24,051 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 14:20:25,311 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 14:20:26,586 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 14:20:27,333 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:20:59,527 - INFO - Database initialized successfully
+2025-11-22 14:21:03,731 - INFO - User authenticated: quan
+2025-11-22 14:21:03,732 - INFO - User logged in: quan
+2025-11-22 14:21:05,255 - INFO - Dashboard data refreshed
+2025-11-22 14:21:05,306 - INFO - Dashboard data refreshed
+2025-11-22 14:21:07,451 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:08,968 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:09,572 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:27,424 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:28,699 - INFO - Refreshed history data: weight from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:30,389 - INFO - Refreshed history data: activity from 2025-10-23 to 2025-11-22
+2025-11-22 14:21:31,176 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 14:23:21,376 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:23:22,173 - INFO - Dashboard data refreshed
+2025-11-22 14:23:34,478 - INFO - Refreshed history data: all from 2025-10-23 to 2025-11-22
+2025-11-22 14:26:22,837 - ERROR - Error exporting all data: 'email'
+2025-11-22 14:26:33,129 - INFO - Exported activity data to: C:/Users/lequa/Documents/activity_data_20251122_142627.csv
+2025-11-22 14:26:55,251 - INFO - Exported weight data to: C:/Users/lequa/Documents/weight_data_20251122_142649.csv
+2025-11-22 14:31:38,927 - INFO - Database initialized successfully
+2025-11-22 14:31:43,621 - INFO - User authenticated: quan
+2025-11-22 14:31:43,622 - INFO - User logged in: quan
+2025-11-22 14:31:45,345 - INFO - Dashboard data refreshed
+2025-11-22 14:31:45,404 - INFO - Dashboard data refreshed
+2025-11-22 14:31:47,201 - INFO - Refreshed history data: weight
+2025-11-22 14:31:57,934 - INFO - Refreshed history data: activity
+2025-11-22 14:32:00,449 - INFO - Refreshed history data: activity
+2025-11-22 14:32:01,022 - INFO - Refreshed history data: activity
+2025-11-22 14:32:01,646 - INFO - Refreshed history data: weight
+2025-11-22 14:32:02,294 - INFO - Refreshed history data: weight
+2025-11-22 14:32:03,076 - INFO - Refreshed history data: activity
+2025-11-22 14:32:03,495 - INFO - Refreshed history data: activity
+2025-11-22 14:32:04,295 - INFO - Refreshed history data: weight
+2025-11-22 14:33:17,452 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:18,736 - INFO - Dashboard data refreshed
+2025-11-22 14:33:25,009 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:25,622 - INFO - Refreshed history data: weight
+2025-11-22 14:33:26,640 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:27,995 - INFO - Dashboard data refreshed
+2025-11-22 14:33:29,304 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:29,550 - INFO - Refreshed history data: weight
+2025-11-22 14:33:31,232 - INFO - Refreshed history data: weight
+2025-11-22 14:33:32,619 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:49,726 - INFO - Refreshed weight_trend chart for week
+2025-11-22 14:33:53,012 - INFO - Refreshed weekly_summary chart for week
+2025-11-22 14:34:02,747 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-22 14:34:03,167 - INFO - Refreshed weekly_summary chart for 6months
+2025-11-22 14:34:10,409 - INFO - Dashboard data refreshed
+2025-11-22 14:37:12,521 - INFO - Refreshed history data: weight
+2025-11-22 14:37:28,044 - INFO - Dashboard data refreshed
+2025-11-22 14:39:36,232 - INFO - Refreshed history data: weight
+2025-11-22 14:39:37,032 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:37,861 - INFO - Dashboard data refreshed
+2025-11-22 14:39:38,746 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:38,999 - INFO - Refreshed history data: weight
+2025-11-22 14:39:40,114 - INFO - Dashboard data refreshed
+2025-11-22 14:39:40,973 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:41,195 - INFO - Refreshed history data: weight
+2025-11-22 14:39:41,669 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:42,242 - INFO - Dashboard data refreshed
+2025-11-22 14:39:43,054 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:43,332 - INFO - Refreshed history data: weight
+2025-11-22 14:39:43,798 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:39:44,339 - INFO - Dashboard data refreshed
+2025-11-22 14:39:45,177 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:50:27,073 - INFO - Dashboard data refreshed
+2025-11-22 14:50:52,785 - INFO - Refreshed history data: weight
+2025-11-22 14:50:55,101 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:50:56,940 - INFO - Dashboard data refreshed
+2025-11-22 14:50:57,909 - INFO - Refreshed weight_trend chart for 6months
+2025-11-22 14:50:58,859 - INFO - Refreshed history data: weight
+2025-11-25 12:41:08,422 - INFO - Database initialized successfully
+2025-11-25 12:41:13,966 - INFO - User authenticated: quan
+2025-11-25 12:41:13,966 - INFO - User logged in: quan
+2025-11-25 12:41:17,572 - INFO - Dashboard data refreshed
+2025-11-25 12:41:17,628 - INFO - Dashboard data refreshed
+2025-11-25 12:41:46,563 - INFO - Weight record added: user=2, weight=30.0, bmi=10.4
+2025-11-25 12:41:48,097 - INFO - Dashboard data refreshed
+2025-11-25 12:41:48,352 - INFO - Refreshed weight_trend chart for week
+2025-11-25 12:41:48,357 - INFO - Refreshed history data: weight
+2025-11-25 12:41:50,572 - INFO - Refreshed weight_trend chart for week
+2025-11-25 12:42:00,495 - INFO - Refreshed bmi chart for week
+2025-11-25 12:42:06,055 - INFO - Refreshed activity chart for week
+2025-11-25 12:42:10,268 - INFO - Refreshed weekly_summary chart for week
+2025-11-25 12:42:18,564 - INFO - Refreshed history data: weight

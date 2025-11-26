@@ -1,13 +1,11 @@
 # gui/components/dashboard_tab.py
 import tkinter as tk
 from tkinter import ttk
-from datetime import datetime, timedelta
+from datetime import datetime
 import logging
-from utils.bmi_calculator import BMICalculator
-from utils.alert_system import AlertSystem
 
 class DashboardTab:
-    """Tab tổng quan dashboard"""
+    """Tab tổng quan dashboard (Giao diện thu gọn)"""
     
     def __init__(self, parent, main_window):
         self.parent = parent
@@ -17,30 +15,34 @@ class DashboardTab:
         self.alert_system = main_window.alert_system
         self.logger = logging.getLogger(__name__)
         
+        # Lưu trạng thái đóng/mở của các section
+        self.sections = {}
+        
         self.setup_ui()
     
     def setup_ui(self):
         """Thiết lập giao diện"""
         self.frame = ttk.Frame(self.parent)
         
-        # Create scrollable frame
-        self.canvas = tk.Canvas(self.frame, bg='#f5f5f5')
+        # Tạo frame cuộn (Scrollable frame)
+        self.canvas = tk.Canvas(self.frame, bg='#f8f9fa', highlightthickness=0)
         scrollbar = ttk.Scrollbar(self.frame, orient="vertical", command=self.canvas.yview)
-        self.scrollable_frame = ttk.Frame(self.canvas)
+        self.scrollable_frame = ttk.Frame(self.canvas, padding="5")
         
         self.scrollable_frame.bind(
             "<Configure>",
             lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
         
-        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw", width=880)
         self.canvas.configure(yscrollcommand=scrollbar.set)
         
-        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.pack(side="left", fill="both", expand=True, padx=(0, 5))
         scrollbar.pack(side="right", fill="y")
         
-        # Bind mousewheel to canvas
+        # Bind mousewheel
         self.canvas.bind("<MouseWheel>", self._on_mousewheel)
+        self.scrollable_frame.bind("<MouseWheel>", self._on_mousewheel)
         
         # Setup content
         self.setup_content()
@@ -49,143 +51,273 @@ class DashboardTab:
         """Xử lý sự kiện cuộn chuột"""
         self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
     
+    def create_collapsible_section(self, title, setup_content_func, icon="▶"):
+        """
+        Tạo một section có thể đóng mở
+        Args:
+            title: Tiêu đề nút
+            setup_content_func: Hàm callback để vẽ nội dung bên trong
+            icon: Icon mặc định
+        """
+        # Container cho cả nút và nội dung
+        section_container = ttk.Frame(self.scrollable_frame)
+        section_container.pack(fill=tk.X, padx=5, pady=3)
+        
+        # Biến lưu trạng thái (False = đang đóng)
+        is_expanded = tk.BooleanVar(value=False)
+        
+        # Frame nội dung (Ban đầu ẩn đi)
+        content_frame = ttk.Frame(section_container)
+        
+        # Hàm toggle
+        def toggle():
+            if is_expanded.get():
+                # Đang mở -> Đóng lại
+                content_frame.pack_forget()
+                toggle_btn.configure(text=f"▶ {title}")
+                is_expanded.set(False)
+            else:
+                # Đang đóng -> Mở ra
+                content_frame.pack(fill=tk.X, expand=True, padx=(15, 5), pady=(8, 10))
+                toggle_btn.configure(text=f"▼ {title}")
+                is_expanded.set(True)
+        
+        # Tạo style cho nút section
+        style = ttk.Style()
+        style.configure('Section.TButton', 
+                       font=('Arial', 11, 'bold'),
+                       padding=(10, 8),
+                       relief="flat",
+                       background='#e9ecef',
+                       foreground='#495057')
+        
+        toggle_btn = ttk.Button(
+            section_container, 
+            text=f"{icon} {title}", 
+            command=toggle,
+            style='Section.TButton',
+            width=25
+        )
+        toggle_btn.pack(fill=tk.X)
+        
+        # Thêm hiệu ứng hover
+        def on_enter(e):
+            toggle_btn.configure(style='SectionHover.TButton')
+        def on_leave(e):
+            toggle_btn.configure(style='Section.TButton')
+            
+        toggle_btn.bind("<Enter>", on_enter)
+        toggle_btn.bind("<Leave>", on_leave)
+        
+        # Tạo style hover
+        style.configure('SectionHover.TButton', 
+                       font=('Arial', 11, 'bold'),
+                       padding=(10, 8),
+                       relief="flat",
+                       background='#dee2e6',
+                       foreground='#212529')
+        
+        # Gọi hàm setup nội dung truyền vào frame con
+        setup_content_func(content_frame)
+        
+        return content_frame
+
     def setup_content(self):
-        """Thiết lập nội dung dashboard"""
-        # Welcome section
+        """Thiết lập toàn bộ nội dung"""
+        # 1. Phần Chào mừng (Luôn hiện)
         self.setup_welcome_section()
         
-        # Alerts section
-        self.setup_alerts_section()
+        # Separator đẹp hơn
+        separator = ttk.Separator(self.scrollable_frame, orient='horizontal')
+        separator.pack(fill='x', padx=20, pady=15)
         
-        # Current stats section
-        self.setup_stats_section()
+        # 2. Các nút chức năng (Đóng/Mở)
         
-        # BMI info section
-        self.setup_bmi_section()
+        # Nút: Cảnh báo và Đề xuất
+        self.create_collapsible_section("🚨 Cảnh báo và Đề xuất", self.setup_alerts_content)
         
-        # Recent activity section
-        self.setup_activity_section()
+        # Nút: Thống kê
+        self.create_collapsible_section("📊 Thống kê chỉ số", self.setup_stats_content)
         
-        # Goals section
-        self.setup_goals_section()
-    
+        # Nút: Chỉ số BMI
+        self.create_collapsible_section("⚖️ Chỉ số BMI chi tiết", self.setup_bmi_content)
+        
+        # Nút: Hoạt động gần đây
+        self.create_collapsible_section("🏃 Hoạt động gần đây", self.setup_activity_content)
+        
+        # Nút: Mục tiêu sức khỏe
+        self.create_collapsible_section("🎯 Mục tiêu sức khỏe", self.setup_goals_content)
+
     def setup_welcome_section(self):
-        """Thiết lập phần chào mừng"""
-        welcome_frame = ttk.LabelFrame(self.scrollable_frame, text="👋 Chào mừng", padding="15")
-        welcome_frame.pack(fill=tk.X, padx=10, pady=5)
+        """Thiết lập phần chào mừng (Giữ nguyên hiển thị)"""
+        welcome_frame = ttk.Frame(self.scrollable_frame, padding="20 15")
+        welcome_frame.pack(fill=tk.X, padx=10, pady=10)
         
-        ttk.Label(welcome_frame, text=f"Xin chào {self.user['full_name']}!",
-                 font=('Arial', 14, 'bold')).pack(anchor=tk.W)
+        # Background màu nhẹ
+        style = ttk.Style()
+        style.configure('Welcome.TFrame', background='#e3f2fd')
+        welcome_frame.configure(style='Welcome.TFrame')
         
-        ttk.Label(welcome_frame, 
-                 text="Theo dõi sức khỏe của bạn một cách thông minh và hiệu quả",
-                 font=('Arial', 10)).pack(anchor=tk.W, pady=(5, 0))
+        # Avatar và thông tin
+        main_info_frame = ttk.Frame(welcome_frame, style='Welcome.TFrame')
+        main_info_frame.pack(fill=tk.X)
         
-        # Current date
-        current_date = datetime.now().strftime("%d/%m/%Y")
-        ttk.Label(welcome_frame, text=f"Hôm nay: {current_date}",
-                 font=('Arial', 9), foreground='gray').pack(anchor=tk.W, pady=(10, 0))
-    
-    def setup_alerts_section(self):
-        """Thiết lập phần cảnh báo"""
-        self.alerts_frame = ttk.LabelFrame(self.scrollable_frame, text="⚠️ Cảnh báo & Đề xuất", padding="15")
-        self.alerts_frame.pack(fill=tk.X, padx=10, pady=5)
+        # Avatar placeholder
+        avatar_frame = ttk.Frame(main_info_frame, style='Welcome.TFrame')
+        avatar_frame.pack(side=tk.LEFT, padx=(0, 15))
         
-        self.alerts_content = ttk.Frame(self.alerts_frame)
+        avatar_label = ttk.Label(avatar_frame, text="👤", font=('Arial', 24), 
+                               background='#e3f2fd')
+        avatar_label.pack()
+        
+        # Thông tin chính
+        info_frame = ttk.Frame(main_info_frame, style='Welcome.TFrame')
+        info_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        
+        ttk.Label(info_frame, text=f"Xin chào {self.user['full_name']}!",
+                 font=('Arial', 18, 'bold'), background='#e3f2fd',
+                 foreground='#1565c0').pack(anchor=tk.W)
+        
+        ttk.Label(info_frame, 
+                 text="Chọn các mục bên dưới để xem chi tiết sức khỏe của bạn.",
+                 font=('Arial', 11), background='#e3f2fd',
+                 foreground='#546e7a').pack(anchor=tk.W, pady=(2, 0))
+        
+        current_date = datetime.now().strftime("%A, %d/%m/%Y")
+        ttk.Label(info_frame, text=f"📅 {current_date}",
+                 font=('Arial', 10), background='#e3f2fd',
+                 foreground='#78909c').pack(anchor=tk.W, pady=(8, 0))
+
+    def setup_alerts_content(self, parent):
+        """Nội dung phần cảnh báo"""
+        # Container cho alerts
+        self.alerts_content = ttk.Frame(parent)
         self.alerts_content.pack(fill=tk.X)
         
-        # Default message
-        ttk.Label(self.alerts_content, text="Đang tải cảnh báo...",
-                 font=('Arial', 10), foreground='gray').pack(pady=10)
-    
-    def setup_stats_section(self):
-        """Thiết lập phần thống kê hiện tại"""
-        self.stats_frame = ttk.LabelFrame(self.scrollable_frame, text="📈 Thống kê Hiện tại", padding="15")
-        self.stats_frame.pack(fill=tk.X, padx=10, pady=5)
+        # Default message với styling đẹp hơn
+        loading_frame = ttk.Frame(self.alerts_content)
+        loading_frame.pack(fill=tk.X, pady=15)
         
-        # Create stats grid
-        stats_grid = ttk.Frame(self.stats_frame)
-        stats_grid.pack(fill=tk.X)
+        ttk.Label(loading_frame, text="⏳ Đang tải cảnh báo...",
+                 font=('Arial', 11), foreground='#78909c',
+                 justify=tk.CENTER).pack(fill=tk.X)
+
+    def setup_stats_content(self, parent):
+        """Nội dung phần thống kê"""
+        # Frame chính với border nhẹ
+        stats_frame = ttk.Frame(parent, relief=tk.RAISED, borderwidth=1)
+        stats_frame.pack(fill=tk.X, padx=5, pady=5)
         
-        # Stats will be populated in refresh_data()
+        # Tiêu đề
+        title_frame = ttk.Frame(stats_frame)
+        title_frame.pack(fill=tk.X, padx=15, pady=(12, 8))
+        ttk.Label(title_frame, text="📈 Tổng quan nhanh", 
+                 font=('Arial', 12, 'bold'), foreground='#2c3e50').pack(anchor=tk.W)
+        
+        # Lưới hiển thị thống kê
+        stats_grid = ttk.Frame(stats_frame)
+        stats_grid.pack(fill=tk.X, padx=10, pady=(0, 12))
+        
         self.stats_labels = {}
         
-        # Weight stat
-        weight_frame = ttk.Frame(stats_grid)
-        weight_frame.grid(row=0, column=0, padx=10, pady=5, sticky="ew")
-        ttk.Label(weight_frame, text="Cân nặng:", font=('Arial', 10, 'bold')).pack(anchor=tk.W)
-        self.stats_labels['weight'] = ttk.Label(weight_frame, text="-- kg", 
-                                              font=('Arial', 12), foreground='#2c3e50')
-        self.stats_labels['weight'].pack(anchor=tk.W)
-        
-        # BMI stat
-        bmi_frame = ttk.Frame(stats_grid)
-        bmi_frame.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
-        ttk.Label(bmi_frame, text="Chỉ số BMI:", font=('Arial', 10, 'bold')).pack(anchor=tk.W)
-        self.stats_labels['bmi'] = ttk.Label(bmi_frame, text="--", 
-                                           font=('Arial', 12), foreground='#2c3e50')
-        self.stats_labels['bmi'].pack(anchor=tk.W)
-        
-        # Weekly activity
-        activity_frame = ttk.Frame(stats_grid)
-        activity_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
-        ttk.Label(activity_frame, text="Hoạt động tuần:", font=('Arial', 10, 'bold')).pack(anchor=tk.W)
-        self.stats_labels['activity'] = ttk.Label(activity_frame, text="-- phút", 
-                                                font=('Arial', 12), foreground='#2c3e50')
-        self.stats_labels['activity'].pack(anchor=tk.W)
-        
-        # Last update
-        update_frame = ttk.Frame(stats_grid)
-        update_frame.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
-        ttk.Label(update_frame, text="Cập nhật:", font=('Arial', 10, 'bold')).pack(anchor=tk.W)
-        self.stats_labels['last_update'] = ttk.Label(update_frame, text="--", 
-                                                   font=('Arial', 10), foreground='gray')
-        self.stats_labels['last_update'].pack(anchor=tk.W)
-    
-    def setup_bmi_section(self):
-        """Thiết lập phần thông tin BMI"""
-        self.bmi_frame = ttk.LabelFrame(self.scrollable_frame, text="🎯 Chỉ số BMI", padding="15")
-        self.bmi_frame.pack(fill=tk.X, padx=10, pady=5)
-        
-        self.bmi_content = ttk.Frame(self.bmi_frame)
-        self.bmi_content.pack(fill=tk.X)
-        
-        # Default message
-        ttk.Label(self.bmi_content, text="Chưa có đủ dữ liệu để tính BMI",
-                 font=('Arial', 10), foreground='gray').pack(pady=10)
-    
-    def setup_activity_section(self):
-        """Thiết lập phần hoạt động gần đây"""
-        self.activity_frame = ttk.LabelFrame(self.scrollable_frame, text="🏃 Hoạt động Gần đây", padding="15")
-        self.activity_frame.pack(fill=tk.X, padx=10, pady=5)
-        
-        self.activity_content = ttk.Frame(self.activity_frame)
-        self.activity_content.pack(fill=tk.X)
-        
-        # Default message
-        ttk.Label(self.activity_content, text="Chưa có hoạt động nào được ghi nhận",
-                 font=('Arial', 10), foreground='gray').pack(pady=10)
-    
-    def setup_goals_section(self):
-        """Thiết lập phần mục tiêu"""
-        goals_frame = ttk.LabelFrame(self.scrollable_frame, text="🎯 Mục tiêu Sức khỏe", padding="15")
-        goals_frame.pack(fill=tk.X, padx=10, pady=5)
-        
-        # Goal items
-        goals = [
-            ("🎯", "Theo dõi cân nặng hàng ngày"),
-            ("🏃", "Hoạt động thể chất 150 phút/tuần"),
-            ("📊", "Duy trì BMI trong khoảng 18.5-23"),
-            ("💧", "Uống đủ nước mỗi ngày"),
-            ("😴", "Ngủ đủ 7-8 tiếng mỗi đêm")
+        # Tạo 4 ô thống kê
+        stats_data = [
+            ("⚖️ Cân nặng", "weight", "-- kg", 0, 0),
+            ("📊 Chỉ số BMI", "bmi", "--", 0, 1),
+            ("🏃 Hoạt động tuần", "activity", "-- phút", 1, 0),
+            ("🕒 Cập nhật", "last_update", "--", 1, 1)
         ]
         
-        for icon, goal in goals:
-            goal_frame = ttk.Frame(goals_frame)
-            goal_frame.pack(fill=tk.X, pady=2)
+        for icon, key, default_value, row, col in stats_data:
+            stat_frame = ttk.Frame(stats_grid, relief=tk.GROOVE, borderwidth=1)
+            stat_frame.grid(row=row, column=col, padx=8, pady=8, sticky="nsew")
+            stat_frame.columnconfigure(0, weight=1)
             
-            ttk.Label(goal_frame, text=icon, font=('Arial', 12)).pack(side=tk.LEFT, padx=(0, 10))
-            ttk.Label(goal_frame, text=goal, font=('Arial', 10)).pack(side=tk.LEFT)
+            # Icon và label
+            ttk.Label(stat_frame, text=icon, font=('Arial', 14),
+                     foreground='#5d6d7e').pack(pady=(8, 2))
+            
+            ttk.Label(stat_frame, text=key.replace('_', ' ').title(), 
+                     font=('Arial', 9), foreground='#7f8c8d').pack()
+            
+            self.stats_labels[key] = ttk.Label(stat_frame, text=default_value, 
+                                             font=('Arial', 13, 'bold'), 
+                                             foreground='#2c3e50')
+            self.stats_labels[key].pack(pady=(2, 8))
+        
+        # Cấu hình grid để căn đều
+        stats_grid.columnconfigure(0, weight=1)
+        stats_grid.columnconfigure(1, weight=1)
+
+    def setup_bmi_content(self, parent):
+        """Nội dung phần BMI"""
+        self.bmi_content = ttk.Frame(parent)
+        self.bmi_content.pack(fill=tk.X)
+        
+        # Default message với styling đẹp hơn
+        empty_frame = ttk.Frame(self.bmi_content)
+        empty_frame.pack(fill=tk.X, pady=20)
+        
+        ttk.Label(empty_frame, text="📋 Chưa có đủ dữ liệu để tính BMI",
+                 font=('Arial', 11), foreground='#95a5a6',
+                 justify=tk.CENTER).pack(fill=tk.X)
+        
+        ttk.Label(empty_frame, text="Hãy thêm thông tin cân nặng để xem phân tích BMI",
+                 font=('Arial', 9), foreground='#bdc3c7',
+                 justify=tk.CENTER).pack(fill=tk.X, pady=(5, 0))
+
+    def setup_activity_content(self, parent):
+        """Nội dung phần hoạt động"""
+        self.activity_content = ttk.Frame(parent)
+        self.activity_content.pack(fill=tk.X)
+        
+        # Default message với styling đẹp hơn
+        empty_frame = ttk.Frame(self.activity_content)
+        empty_frame.pack(fill=tk.X, pady=20)
+        
+        ttk.Label(empty_frame, text="🏃 Chưa có hoạt động nào được ghi nhận",
+                 font=('Arial', 11), foreground='#95a5a6',
+                 justify=tk.CENTER).pack(fill=tk.X)
+        
+        ttk.Label(empty_frame, text="Hãy thêm hoạt động thể chất để theo dõi tiến độ",
+                 font=('Arial', 9), foreground='#bdc3c7',
+                 justify=tk.CENTER).pack(fill=tk.X, pady=(5, 0))
+
+    def setup_goals_content(self, parent):
+        """Nội dung phần mục tiêu"""
+        goals_frame = ttk.Frame(parent)
+        goals_frame.pack(fill=tk.X)
+        
+        goals = [
+            ("🎯", "Theo dõi cân nặng hàng ngày", "#e74c3c"),
+            ("🏃", "Hoạt động thể chất 150 phút/tuần", "#3498db"),
+            ("📊", "Duy trì BMI trong khoảng 18.5-23", "#2ecc71"),
+            ("💧", "Uống đủ nước mỗi ngày", "#3498db"),
+            ("😴", "Ngủ đủ 7-8 tiếng mỗi đêm", "#9b59b6")
+        ]
+        
+        for icon, goal, color in goals:
+            goal_frame = ttk.Frame(goals_frame, relief=tk.RIDGE, borderwidth=1)
+            goal_frame.pack(fill=tk.X, pady=4, padx=2)
+            
+            # Icon với màu sắc
+            icon_label = ttk.Label(goal_frame, text=icon, font=('Arial', 16))
+            icon_label.pack(side=tk.LEFT, padx=(12, 10), pady=8)
+            
+            # Text goal
+            goal_label = ttk.Label(goal_frame, text=goal, font=('Arial', 11))
+            goal_label.pack(side=tk.LEFT, fill=tk.X, expand=True, pady=8)
+            
+            # Progress indicator (placeholder)
+            progress_frame = ttk.Frame(goal_frame)
+            progress_frame.pack(side=tk.RIGHT, padx=10, pady=8)
+            
+            # Dot indicator
+            dot_label = ttk.Label(progress_frame, text="●", font=('Arial', 8),
+                                foreground='#bdc3c7')
+            dot_label.pack()
+
+    # --- CÁC HÀM LOGIC (GIỮ NGUYÊN) ---
     
     def refresh_data(self):
         """Làm mới dữ liệu dashboard"""
@@ -210,7 +342,7 @@ class DashboardTab:
             bmi = BMICalculator.calculate_bmi(current_weight, height_m)
             
             self.stats_labels['weight'].config(text=f"{current_weight} kg")
-            self.stats_labels['bmi'].config(text=f"{bmi}")
+            self.stats_labels['bmi'].config(text=f"{bmi:.1f}")
             
             # Color code BMI
             category = BMICalculator.get_bmi_category(bmi)
@@ -246,33 +378,61 @@ class DashboardTab:
         )
         
         if not alerts:
-            ttk.Label(self.alerts_content, text="✅ Không có cảnh báo nào",
-                     font=('Arial', 10), foreground='green').pack(pady=10)
+            empty_frame = ttk.Frame(self.alerts_content)
+            empty_frame.pack(fill=tk.X, pady=20)
+            ttk.Label(empty_frame, text="✅ Không có cảnh báo nào",
+                     font=('Arial', 11), foreground='#27ae60',
+                     justify=tk.CENTER).pack(fill=tk.X)
             return
         
-        # Display alerts
+        # Display alerts với styling đẹp hơn
         for alert in alerts:
-            alert_frame = ttk.Frame(self.alerts_content, relief=tk.GROOVE, borderwidth=1)
-            alert_frame.pack(fill=tk.X, pady=2, padx=5)
+            alert_frame = ttk.Frame(self.alerts_content, relief=tk.RAISED, borderwidth=1)
+            alert_frame.pack(fill=tk.X, pady=3, padx=2)
+            
+            # Màu nền dựa trên mức độ cảnh báo
+            bg_colors = {
+                'critical': '#ffebee',
+                'danger': '#fff3e0', 
+                'warning': '#fff8e1',
+                'info': '#e3f2fd',
+                'success': '#e8f5e8'
+            }
+            
+            # Configure style cho alert frame
+            style = ttk.Style()
+            style.configure(f'Alert.{alert["level"]}.TFrame', 
+                          background=bg_colors.get(alert['level'], '#fafafa'))
+            
+            alert_frame.configure(style=f'Alert.{alert["level"]}.TFrame')
             
             # Alert icon and message
-            icon_label = ttk.Label(alert_frame, text=alert.get('icon', '⚠️'), 
-                                 font=('Arial', 14))
-            icon_label.pack(side=tk.LEFT, padx=5, pady=5)
+            icon_frame = ttk.Frame(alert_frame, style=f'Alert.{alert["level"]}.TFrame')
+            icon_frame.pack(side=tk.LEFT, padx=12, pady=10)
             
-            message_label = ttk.Label(alert_frame, text=alert['message'], 
-                                    font=('Arial', 10), wraplength=800, justify=tk.LEFT)
-            message_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
+            icon_label = ttk.Label(icon_frame, text=alert.get('icon', '⚠️'), 
+                                 font=('Arial', 16),
+                                 background=bg_colors.get(alert['level'], '#fafafa'))
+            icon_label.pack()
+            
+            message_frame = ttk.Frame(alert_frame, style=f'Alert.{alert["level"]}.TFrame')
+            message_frame.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10), pady=10)
+            
+            message_label = ttk.Label(message_frame, text=alert['message'], 
+                                    font=('Arial', 10), wraplength=700, justify=tk.LEFT,
+                                    background=bg_colors.get(alert['level'], '#fafafa'))
+            message_label.pack(anchor=tk.W)
             
             # Color code by level
             colors = {
-                'critical': '#ff4444',
-                'danger': '#ff6b6b', 
-                'warning': '#ffa726',
-                'info': '#42a5f5',
-                'success': '#66bb6a'
+                'critical': '#c62828',
+                'danger': '#e65100', 
+                'warning': '#f57c00',
+                'info': '#1565c0',
+                'success': '#2e7d32'
             }
             message_label.config(foreground=colors.get(alert['level'], 'black'))
+            icon_label.config(foreground=colors.get(alert['level'], 'black'))
     
     def update_bmi_info(self):
         """Cập nhật thông tin BMI"""
@@ -283,8 +443,11 @@ class DashboardTab:
         current_weight = self.db.get_current_weight(self.user['user_id'])
         
         if not current_weight:
-            ttk.Label(self.bmi_content, text="Chưa có đủ dữ liệu để tính BMI",
-                     font=('Arial', 10), foreground='gray').pack(pady=10)
+            empty_frame = ttk.Frame(self.bmi_content)
+            empty_frame.pack(fill=tk.X, pady=20)
+            ttk.Label(empty_frame, text="📋 Chưa có đủ dữ liệu để tính BMI",
+                     font=('Arial', 11), foreground='#95a5a6',
+                     justify=tk.CENTER).pack(fill=tk.X)
             return
         
         from utils.bmi_calculator import BMICalculator
@@ -294,34 +457,61 @@ class DashboardTab:
         recommendations = BMICalculator.get_health_recommendations(bmi)
         ideal_range = BMICalculator.calculate_ideal_weight_range(height_m)
         
-        # BMI value and category
-        bmi_frame = ttk.Frame(self.bmi_content)
-        bmi_frame.pack(fill=tk.X, pady=5)
+        # Main BMI card
+        bmi_card = ttk.Frame(self.bmi_content, relief=tk.RAISED, borderwidth=1)
+        bmi_card.pack(fill=tk.X, pady=5)
         
-        ttk.Label(bmi_frame, text=f"Chỉ số BMI: ", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
-        ttk.Label(bmi_frame, text=f"{bmi}", font=('Arial', 11, 'bold'),
+        # Header với chỉ số BMI
+        header_frame = ttk.Frame(bmi_card)
+        header_frame.pack(fill=tk.X, padx=15, pady=12)
+        
+        ttk.Label(header_frame, text="Chỉ số BMI của bạn:", 
+                 font=('Arial', 12, 'bold')).pack(side=tk.LEFT)
+        
+        bmi_value_frame = ttk.Frame(header_frame)
+        bmi_value_frame.pack(side=tk.RIGHT)
+        
+        ttk.Label(bmi_value_frame, text=f"{bmi:.1f}", 
+                 font=('Arial', 16, 'bold'),
                  foreground=category['color']).pack(side=tk.LEFT)
-        ttk.Label(bmi_frame, text=f" - {category['category']}", font=('Arial', 11),
-                 foreground=category['color']).pack(side=tk.LEFT)
+        
+        ttk.Label(bmi_value_frame, text=f" - {category['category']}", 
+                 font=('Arial', 12),
+                 foreground=category['color']).pack(side=tk.LEFT, padx=(5, 0))
+        
+        # Thông tin chi tiết
+        details_frame = ttk.Frame(bmi_card)
+        details_frame.pack(fill=tk.X, padx=15, pady=(0, 12))
         
         # Risk level
-        ttk.Label(self.bmi_content, text=f"Mức độ nguy cơ: {category['risk']}",
-                 font=('Arial', 10)).pack(anchor=tk.W, pady=2)
+        risk_frame = ttk.Frame(details_frame)
+        risk_frame.pack(fill=tk.X, pady=3)
+        ttk.Label(risk_frame, text="Mức độ nguy cơ:", font=('Arial', 10, 'bold')).pack(side=tk.LEFT)
+        ttk.Label(risk_frame, text=category['risk'], font=('Arial', 10),
+                 foreground=category['color']).pack(side=tk.LEFT, padx=(5, 0))
         
         # Ideal weight range
-        ttk.Label(self.bmi_content, 
-                 text=f"Cân nặng lý tưởng: {ideal_range['min']} - {ideal_range['max']} kg (BMI {ideal_range['bmi_range']})",
-                 font=('Arial', 10)).pack(anchor=tk.W, pady=2)
+        ideal_frame = ttk.Frame(details_frame)
+        ideal_frame.pack(fill=tk.X, pady=3)
+        ttk.Label(ideal_frame, text="Cân nặng lý tưởng:", font=('Arial', 10, 'bold')).pack(side=tk.LEFT)
+        ttk.Label(ideal_frame, 
+                 text=f"{ideal_range['min']} - {ideal_range['max']} kg (BMI {ideal_range['bmi_range']})",
+                 font=('Arial', 10)).pack(side=tk.LEFT, padx=(5, 0))
         
-        # Recommendations
-        ttk.Label(self.bmi_content, text="Đề xuất:", font=('Arial', 10, 'bold')).pack(anchor=tk.W, pady=(10, 5))
-        
-        for recommendation in recommendations[:3]:  # Show first 3 recommendations
-            rec_frame = ttk.Frame(self.bmi_content)
-            rec_frame.pack(fill=tk.X, pady=1)
-            ttk.Label(rec_frame, text="• ", font=('Arial', 9)).pack(side=tk.LEFT)
-            ttk.Label(rec_frame, text=recommendation, font=('Arial', 9),
-                     wraplength=800, justify=tk.LEFT).pack(side=tk.LEFT, fill=tk.X, expand=True)
+        # Recommendations card
+        if recommendations:
+            rec_card = ttk.Frame(self.bmi_content, relief=tk.RAISED, borderwidth=1)
+            rec_card.pack(fill=tk.X, pady=(10, 5))
+            
+            ttk.Label(rec_card, text="💡 Đề xuất sức khỏe", 
+                     font=('Arial', 11, 'bold')).pack(anchor=tk.W, padx=15, pady=10)
+            
+            for recommendation in recommendations[:3]:  # Show first 3 recommendations
+                rec_frame = ttk.Frame(rec_card)
+                rec_frame.pack(fill=tk.X, padx=15, pady=2)
+                ttk.Label(rec_frame, text="•", font=('Arial', 10)).pack(side=tk.LEFT, padx=(0, 8))
+                ttk.Label(rec_frame, text=recommendation, font=('Arial', 10),
+                         wraplength=800, justify=tk.LEFT).pack(side=tk.LEFT, fill=tk.X, expand=True)
     
     def update_recent_activity(self):
         """Cập nhật hoạt động gần đây"""
@@ -332,39 +522,75 @@ class DashboardTab:
         activities = self.db.get_activities(self.user['user_id'], days=7)
         
         if not activities:
-            ttk.Label(self.activity_content, text="Chưa có hoạt động nào trong 7 ngày qua",
-                     font=('Arial', 10), foreground='gray').pack(pady=10)
+            empty_frame = ttk.Frame(self.activity_content)
+            empty_frame.pack(fill=tk.X, pady=20)
+            ttk.Label(empty_frame, text="🏃 Chưa có hoạt động nào trong 7 ngày qua",
+                     font=('Arial', 11), foreground='#95a5a6',
+                     justify=tk.CENTER).pack(fill=tk.X)
             return
         
         # Show last 5 activities
         for activity in activities[:5]:
-            activity_frame = ttk.Frame(self.activity_content, relief=tk.GROOVE, borderwidth=1)
-            activity_frame.pack(fill=tk.X, pady=2, padx=5)
+            activity_frame = ttk.Frame(self.activity_content, relief=tk.RIDGE, borderwidth=1)
+            activity_frame.pack(fill=tk.X, pady=2)
             
             # Activity info
-            info_text = f"{activity['activity_type']} - {activity['duration']} phút"
-            if activity['calories_burned']:
-                info_text += f" - {activity['calories_burned']} cal"
+            main_info_frame = ttk.Frame(activity_frame)
+            main_info_frame.pack(fill=tk.X, padx=12, pady=8)
             
-            ttk.Label(activity_frame, text=info_text, font=('Arial', 10)).pack(side=tk.LEFT, padx=5, pady=5)
-            ttk.Label(activity_frame, text=activity['date'], font=('Arial', 9), 
-                     foreground='gray').pack(side=tk.RIGHT, padx=5, pady=5)
+            # Icon và type
+            icon_type_frame = ttk.Frame(main_info_frame)
+            icon_type_frame.pack(side=tk.LEFT)
+            
+            # Icon dựa trên loại activity
+            activity_icons = {
+                'chạy bộ': '🏃', 'đi bộ': '🚶', 'bơi lội': '🏊',
+                'xe đạp': '🚴', 'gym': '💪', 'yoga': '🧘'
+            }
+            icon = activity_icons.get(activity['activity_type'].lower(), '🏃')
+            
+            ttk.Label(icon_type_frame, text=icon, font=('Arial', 14)).pack(side=tk.LEFT)
+            ttk.Label(icon_type_frame, text=activity['activity_type'], 
+                     font=('Arial', 11, 'bold')).pack(side=tk.LEFT, padx=(8, 15))
+            
+            # Thông tin chi tiết
+            details_frame = ttk.Frame(main_info_frame)
+            details_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
+            
+            info_text = f"{activity['duration']} phút"
+            if activity['calories_burned']:
+                info_text += f" • {activity['calories_burned']} cal"
+            
+            ttk.Label(details_frame, text=info_text, font=('Arial', 10)).pack(anchor=tk.W)
+            
+            # Ngày
+            date_frame = ttk.Frame(main_info_frame)
+            date_frame.pack(side=tk.RIGHT)
+            ttk.Label(date_frame, text=activity['date'], font=('Arial', 9), 
+                     foreground='gray').pack()
         
         # Show total for week
         total_duration = sum(act['duration'] for act in activities)
         total_frame = ttk.Frame(self.activity_content)
-        total_frame.pack(fill=tk.X, pady=5)
+        total_frame.pack(fill=tk.X, pady=8)
         
-        ttk.Label(total_frame, text=f"Tổng tuần: {total_duration} phút", 
-                 font=('Arial', 10, 'bold')).pack(side=tk.LEFT)
+        # Card tổng kết
+        summary_card = ttk.Frame(total_frame, relief=tk.RAISED, borderwidth=1)
+        summary_card.pack(fill=tk.X, padx=2)
+        
+        summary_content = ttk.Frame(summary_card)
+        summary_content.pack(fill=tk.X, padx=15, pady=10)
+        
+        ttk.Label(summary_content, text=f"📅 Tổng tuần: {total_duration} phút", 
+                 font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
         
         # Compare to WHO recommendation
         if total_duration >= 150:
-            status_text = "✅ Đạt mục tiêu WHO"
-            color = "green"
+            status_text = "✅ Đạt mục tiêu WHO (150 phút/tuần)"
+            color = "#27ae60"
         else:
-            status_text = f"⚠️ Còn {150 - total_duration} phút để đạt mục tiêu"
-            color = "orange"
+            status_text = f"⏳ Còn {150 - total_duration} phút để đạt mục tiêu WHO"
+            color = "#f39c12"
         
-        ttk.Label(total_frame, text=status_text, font=('Arial', 10),
+        ttk.Label(summary_content, text=status_text, font=('Arial', 10),
                  foreground=color).pack(side=tk.RIGHT)
