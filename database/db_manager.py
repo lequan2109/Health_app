@@ -79,6 +79,36 @@ class DatabaseManager:
                 )
             ''')
             
+            # Bảng theo dõi giấc ngủ
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS sleep_records (
+                    sleep_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    record_date DATE NOT NULL,
+                    sleep_hours REAL NOT NULL,
+                    sleep_quality TEXT,
+                    notes TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(user_id),
+                    UNIQUE(user_id, record_date)
+                )
+            ''')
+            
+            # Bảng theo dõi nhịp tim
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS heart_rate_records (
+                    heart_rate_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    record_date DATE NOT NULL,
+                    record_time TIME,
+                    bpm INTEGER NOT NULL,
+                    activity_type TEXT,
+                    notes TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(user_id)
+                )
+            ''')
+            
             conn.commit()
             self.logger.info("Database initialized successfully")
             
@@ -144,6 +174,42 @@ class DatabaseManager:
         except Exception as e:
             self.logger.error(f"Error authenticating user: {e}")
             return None
+        finally:
+            conn.close()
+    
+    def update_user(self, user_id: int, full_name: str = None, height: float = None,
+                   birth_date: str = None, gender: str = None) -> bool:
+        """Cập nhật thông tin user"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            # Lấy thông tin hiện tại
+            cursor.execute('SELECT full_name, height, birth_date, gender FROM users WHERE user_id = ?', 
+                          (user_id,))
+            result = cursor.fetchone()
+            if not result:
+                return False
+            
+            # Giữ giá trị cũ nếu không cập nhật
+            full_name = full_name if full_name else result[0]
+            height = height if height else result[1]
+            birth_date = birth_date if birth_date else result[2]
+            gender = gender if gender else result[3]
+            
+            cursor.execute('''
+                UPDATE users 
+                SET full_name = ?, height = ?, birth_date = ?, gender = ?
+                WHERE user_id = ?
+            ''', (full_name, height, birth_date, gender, user_id))
+            
+            conn.commit()
+            self.logger.info(f"User updated: {user_id}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error updating user: {e}")
+            return False
         finally:
             conn.close()
     
@@ -340,6 +406,178 @@ class DatabaseManager:
             return None
         finally:
             conn.close()
+    
+    # ========== SLEEP RECORDS ==========
+    
+    def add_sleep_record(self, user_id: int, record_date: str, sleep_hours: float, 
+                        sleep_quality: str = "Trung bình", notes: str = "") -> bool:
+        """Thêm bản ghi giấc ngủ"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                INSERT OR REPLACE INTO sleep_records 
+                (user_id, record_date, sleep_hours, sleep_quality, notes)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (user_id, record_date, sleep_hours, sleep_quality, notes))
+            
+            conn.commit()
+            self.logger.info(f"Sleep record added for user {user_id}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error adding sleep record: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def get_sleep_records(self, user_id: int, days: int = 30) -> List[Dict]:
+        """Lấy bản ghi giấc ngủ trong N ngày gần nhất"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            from datetime import datetime, timedelta
+            start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+            
+            cursor.execute('''
+                SELECT sleep_id, user_id, record_date, sleep_hours, sleep_quality, notes
+                FROM sleep_records
+                WHERE user_id = ? AND record_date >= ?
+                ORDER BY record_date DESC
+            ''', (user_id, start_date))
+            
+            rows = cursor.fetchall()
+            records = []
+            for row in rows:
+                records.append({
+                    'sleep_id': row[0],
+                    'user_id': row[1],
+                    'record_date': row[2],
+                    'sleep_hours': row[3],
+                    'sleep_quality': row[4],
+                    'notes': row[5]
+                })
+            
+            return records
+            
+        except Exception as e:
+            self.logger.error(f"Error getting sleep records: {e}")
+            return []
+        finally:
+            conn.close()
+    
+    def get_average_sleep(self, user_id: int, days: int = 7) -> float:
+        """Lấy giờ ngủ trung bình trong N ngày"""
+        records = self.get_sleep_records(user_id, days)
+        if not records:
+            return 0.0
+        total_hours = sum(r['sleep_hours'] for r in records)
+        return round(total_hours / len(records), 1)
+    
+    # ========== HEART RATE RECORDS ==========
+    
+    def add_heart_rate_record(self, user_id: int, record_date: str, record_time: str,
+                             bpm: int, activity_type: str = "Nghỉ ngơi", notes: str = "") -> bool:
+        """Thêm bản ghi nhịp tim"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                INSERT INTO heart_rate_records 
+                (user_id, record_date, record_time, bpm, activity_type, notes)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (user_id, record_date, record_time, bpm, activity_type, notes))
+            
+            conn.commit()
+            self.logger.info(f"Heart rate record added for user {user_id}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error adding heart rate record: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def get_heart_rate_records(self, user_id: int, days: int = 30) -> List[Dict]:
+        """Lấy bản ghi nhịp tim trong N ngày gần nhất"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            from datetime import datetime, timedelta
+            start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+            
+            cursor.execute('''
+                SELECT heart_rate_id, user_id, record_date, record_time, bpm, activity_type, notes
+                FROM heart_rate_records
+                WHERE user_id = ? AND record_date >= ?
+                ORDER BY record_date DESC, record_time DESC
+            ''', (user_id, start_date))
+            
+            rows = cursor.fetchall()
+            records = []
+            for row in rows:
+                records.append({
+                    'heart_rate_id': row[0],
+                    'user_id': row[1],
+                    'record_date': row[2],
+                    'record_time': row[3],
+                    'bpm': row[4],
+                    'activity_type': row[5],
+                    'notes': row[6]
+                })
+            
+            return records
+            
+        except Exception as e:
+            self.logger.error(f"Error getting heart rate records: {e}")
+            return []
+        finally:
+            conn.close()
+    
+    def get_latest_heart_rate(self, user_id: int) -> Optional[Dict]:
+        """Lấy nhịp tim mới nhất"""
+        try:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute('''
+                SELECT heart_rate_id, user_id, record_date, record_time, bpm, activity_type, notes
+                FROM heart_rate_records
+                WHERE user_id = ?
+                ORDER BY record_date DESC, record_time DESC
+                LIMIT 1
+            ''', (user_id,))
+            
+            row = cursor.fetchone()
+            if row:
+                return {
+                    'heart_rate_id': row[0],
+                    'user_id': row[1],
+                    'record_date': row[2],
+                    'record_time': row[3],
+                    'bpm': row[4],
+                    'activity_type': row[5],
+                    'notes': row[6]
+                }
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"Error getting latest heart rate: {e}")
+            return None
+        finally:
+            conn.close()
+    
+    def get_average_heart_rate(self, user_id: int, days: int = 7) -> float:
+        """Lấy nhịp tim trung bình trong N ngày"""
+        records = self.get_heart_rate_records(user_id, days)
+        if not records:
+            return 0.0
+        total_bpm = sum(r['bpm'] for r in records)
+        return round(total_bpm / len(records), 0)
     
     def get_weight_history(self, user_id: int, from_date: str, to_date: str) -> List[Dict]:
         """Lấy lịch sử cân nặng theo khoảng thời gian"""

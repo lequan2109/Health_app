@@ -10,6 +10,10 @@ class ChartGenerator:
     
     def __init__(self):
         plt.style.use('seaborn-v0_8')
+        # Reserve extra top space so titles are not clipped across different charts
+        plt.rcParams['figure.subplot.top'] = 0.85
+        plt.rcParams['figure.subplot.bottom'] = 0.10
+        plt.rcParams['figure.titlesize'] = 14
         self.logger = logging.getLogger(__name__)
     
     def create_weight_trend_chart(self, weight_data: List[Dict], period: str = 'week') -> plt.Figure:
@@ -47,7 +51,8 @@ class ChartGenerator:
                 ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
             
             plt.xticks(rotation=45)
-            plt.tight_layout()
+            fig.tight_layout()
+            return fig
             return fig
             
         except Exception as e:
@@ -86,7 +91,7 @@ class ChartGenerator:
             ax.axhline(y=25, color='red', linestyle='--', alpha=0.5)
             
             plt.xticks(rotation=45)
-            plt.tight_layout()
+            fig.tight_layout()
             return fig
             
         except Exception as e:
@@ -99,7 +104,7 @@ class ChartGenerator:
             if not activity_data:
                 return self._create_empty_chart("Không có dữ liệu hoạt động")
             
-            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
             
             # Chuẩn bị dữ liệu
             activities_by_type = {}
@@ -140,7 +145,7 @@ class ChartGenerator:
                 ax2.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m'))
                 plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
             
-            plt.tight_layout()
+            fig.tight_layout()
             return fig
             
         except Exception as e:
@@ -203,7 +208,7 @@ class ChartGenerator:
                 ax4.set_title('Phân loại BMI hiện tại')
                 plt.setp(ax4.xaxis.get_majorticklabels(), rotation=45)
             
-            plt.tight_layout()
+            fig.tight_layout()
             return fig
             
         except Exception as e:
@@ -218,3 +223,161 @@ class ChartGenerator:
         ax.set_xticks([])
         ax.set_yticks([])
         return fig
+    
+    def create_sleep_trend_chart(self, sleep_data: List[Dict], period: str = 'week') -> plt.Figure:
+        """Tạo biểu đồ xu hướng giấc ngủ"""
+        try:
+            if not sleep_data:
+                return self._create_empty_chart("Không có dữ liệu giấc ngủ")
+            
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            dates = [datetime.strptime(item['record_date'], '%Y-%m-%d') for item in sleep_data]
+            sleep_hours = [item['sleep_hours'] for item in sleep_data]
+            
+            # Vẽ đường xu hướng
+            ax.plot(dates, sleep_hours, marker='o', linewidth=2, markersize=6,
+                   color='#9B59B6', label='Giờ ngủ')
+            
+            # Vẽ vùng mục tiêu (7-9 giờ)
+            ax.fill_between(dates, 7, 9, alpha=0.1, color='#27AE60', label='Mục tiêu (7-9h)')
+            ax.axhline(y=7, color='#27AE60', linestyle='--', linewidth=1, alpha=0.5)
+            ax.axhline(y=9, color='#27AE60', linestyle='--', linewidth=1, alpha=0.5)
+            
+            ax.set_title('😴 Xu hướng Giấc ngủ', fontsize=14, fontweight='bold', pad=20)
+            ax.set_ylabel('Giờ ngủ', fontsize=12)
+            ax.set_ylim(0, 12)
+            ax.grid(True, alpha=0.3)
+            ax.legend()
+            
+            # Format trục x
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m'))
+            ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+            plt.xticks(rotation=45)
+            fig.tight_layout()
+            
+            return fig
+            
+        except Exception as e:
+            self.logger.error(f"Error creating sleep trend chart: {e}")
+            return self._create_empty_chart("Lỗi tạo biểu đồ giấc ngủ")
+    
+    def create_heart_rate_trend_chart(self, hr_data: List[Dict], period: str = 'week') -> plt.Figure:
+        """Tạo biểu đồ xu hướng nhịp tim"""
+        try:
+            if not hr_data:
+                return self._create_empty_chart("Không có dữ liệu nhịp tim")
+            
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            dates = [datetime.strptime(item['record_date'], '%Y-%m-%d') for item in hr_data]
+            bpms = [item['bpm'] for item in hr_data]
+            
+            # Vẽ đường xu hướng
+            ax.plot(dates, bpms, marker='o', linewidth=2, markersize=6,
+                   color='#E74C3C', label='BPM')
+            
+            # Vẽ vùng bình thường (60-100 BPM)
+            ax.fill_between(dates, 60, 100, alpha=0.1, color='#27AE60', label='Bình thường (60-100)')
+            ax.axhline(y=60, color='#27AE60', linestyle='--', linewidth=1, alpha=0.5)
+            ax.axhline(y=100, color='#27AE60', linestyle='--', linewidth=1, alpha=0.5)
+            
+            # Cảnh báo ngưỡng
+            ax.axhline(y=120, color='#F39C12', linestyle='--', linewidth=1, alpha=0.5, label='Cảnh báo (120)')
+            ax.axhline(y=40, color='#F39C12', linestyle='--', linewidth=1, alpha=0.5)
+            
+            ax.set_title('❤️ Xu hướng Nhịp tim', fontsize=14, fontweight='bold', pad=20)
+            ax.set_ylabel('BPM', fontsize=12)
+            ax.grid(True, alpha=0.3)
+            ax.legend()
+            
+            # Format trục x
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m'))
+            ax.xaxis.set_major_locator(mdates.DayLocator(interval=1))
+            plt.xticks(rotation=45)
+            fig.tight_layout()
+            
+            return fig
+            
+        except Exception as e:
+            self.logger.error(f"Error creating heart rate trend chart: {e}")
+            return self._create_empty_chart("Lỗi tạo biểu đồ nhịp tim")
+    
+    def create_sleep_quality_chart(self, sleep_data: List[Dict]) -> plt.Figure:
+        """Tạo biểu đồ chất lượng giấc ngủ"""
+        try:
+            if not sleep_data:
+                return self._create_empty_chart("Không có dữ liệu giấc ngủ")
+            
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+            
+            # Phân bố chất lượng
+            quality_counts = {}
+            for item in sleep_data:
+                quality = item.get('sleep_quality', 'Không xác định')
+                quality_counts[quality] = quality_counts.get(quality, 0) + 1
+            
+            quality_labels = list(quality_counts.keys())
+            quality_values = list(quality_counts.values())
+            colors = ['#E74C3C', '#F39C12', '#F1C40F', '#2ECC71', '#27AE60'][:len(quality_labels)]
+            
+            ax1.pie(quality_values, labels=quality_labels, autopct='%1.1f%%', colors=colors)
+            ax1.set_title('Phân bố Chất lượng Giấc ngủ')
+            
+            # Trung bình giờ ngủ theo ngày
+            dates = [datetime.strptime(item['record_date'], '%Y-%m-%d') for item in sleep_data[-7:]]
+            sleep_hours = [item['sleep_hours'] for item in sleep_data[-7:]]
+            
+            ax2.bar(dates, sleep_hours, color='#9B59B6', alpha=0.7)
+            ax2.axhline(y=8, color='#27AE60', linestyle='--', label='Mục tiêu (8h)')
+            ax2.set_title('Giờ ngủ 7 ngày gần nhất')
+            ax2.set_ylabel('Giờ')
+            ax2.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m'))
+            plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
+            ax2.legend()
+            
+            fig.tight_layout()
+            return fig
+            
+        except Exception as e:
+            self.logger.error(f"Error creating sleep quality chart: {e}")
+            return self._create_empty_chart("Lỗi tạo biểu đồ chất lượng giấc ngủ")
+    
+    def create_heart_rate_distribution_chart(self, hr_data: List[Dict]) -> plt.Figure:
+        """Tạo biểu đồ phân bố nhịp tim"""
+        try:
+            if not hr_data:
+                return self._create_empty_chart("Không có dữ liệu nhịp tim")
+            
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+            
+            # Biểu đồ phân bố hoạt động
+            activity_counts = {}
+            for item in hr_data:
+                activity = item.get('activity_type', 'Không xác định')
+                activity_counts[activity] = activity_counts.get(activity, 0) + 1
+            
+            activity_labels = list(activity_counts.keys())
+            activity_values = list(activity_counts.values())
+            colors = ['#3498DB', '#2ECC71', '#E74C3C', '#F39C12', '#9B59B6'][:len(activity_labels)]
+            
+            ax1.barh(activity_labels, activity_values, color=colors)
+            ax1.set_title('Nhịp tim theo loại hoạt động')
+            ax1.set_xlabel('Số lần đo')
+            
+            # Phân bố BPM
+            bpms = [item['bpm'] for item in hr_data]
+            ax2.hist(bpms, bins=10, color='#E74C3C', alpha=0.7, edgecolor='black')
+            ax2.axvline(x=sum(bpms)/len(bpms), color='#27AE60', linestyle='--', 
+                       linewidth=2, label=f"Trung bình: {sum(bpms)/len(bpms):.0f}")
+            ax2.set_title('Phân bố BPM')
+            ax2.set_xlabel('BPM')
+            ax2.set_ylabel('Tần suất')
+            ax2.legend()
+            
+            fig.tight_layout()
+            return fig
+            
+        except Exception as e:
+            self.logger.error(f"Error creating heart rate distribution chart: {e}")
+            return self._create_empty_chart("Lỗi tạo biểu đồ phân bố nhịp tim")

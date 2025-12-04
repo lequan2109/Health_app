@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 import logging
-import random
 from utils.validators import HealthDataValidator
 from utils.bmi_calculator import BMICalculator
 
@@ -35,44 +34,13 @@ class InputTab:
         self.setup_heart_rate_tab()
         self.setup_device_tab()
     
-    def create_scrollable_frame(self, parent, tab_name):
-        """Tạo frame có thanh cuộn"""
-        # Create canvas and scrollbar
-        canvas = tk.Canvas(parent, bg='white', highlightthickness=0)
-        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
-        scrollable_frame = ttk.Frame(canvas)
-        
-        scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-        )
-        
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-        
-        # Pack canvas and scrollbar
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-        
-        # Bind mousewheel
-        def _on_mousewheel(event):
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        
-        canvas.bind("<MouseWheel>", _on_mousewheel)
-        scrollable_frame.bind("<MouseWheel>", _on_mousewheel)
-        
-        return scrollable_frame
-    
     def setup_weight_tab(self):
         """Thiết lập tab nhập cân nặng"""
         weight_tab = ttk.Frame(self.input_notebook)
         self.input_notebook.add(weight_tab, text="⚖️ Cân nặng")
         
-        # Create scrollable content
-        content_frame = self.create_scrollable_frame(weight_tab, "weight")
-        
         # Input form
-        form_frame = ttk.LabelFrame(content_frame, text="Nhập thông tin cân nặng", padding="15")
+        form_frame = ttk.LabelFrame(weight_tab, text="Nhập thông tin cân nặng", padding="15")
         form_frame.pack(fill=tk.X, padx=10, pady=10)
         
         # Weight input
@@ -113,7 +81,7 @@ class InputTab:
                   command=self.clear_weight_form).pack(side=tk.LEFT, padx=5)
         
         # Recent entries
-        recent_frame = ttk.LabelFrame(content_frame, text="Cân nặng gần đây", padding="10")
+        recent_frame = ttk.LabelFrame(weight_tab, text="Cân nặng gần đây", padding="10")
         recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
         # Treeview for recent entries
@@ -142,11 +110,8 @@ class InputTab:
         activity_tab = ttk.Frame(self.input_notebook)
         self.input_notebook.add(activity_tab, text="🏃 Hoạt động")
         
-        # Create scrollable content
-        content_frame = self.create_scrollable_frame(activity_tab, "activity")
-        
         # Input form
-        form_frame = ttk.LabelFrame(content_frame, text="Nhập thông tin hoạt động", padding="15")
+        form_frame = ttk.LabelFrame(activity_tab, text="Nhập thông tin hoạt động", padding="15")
         form_frame.pack(fill=tk.X, padx=10, pady=10)
         
         # Activity type
@@ -189,37 +154,43 @@ class InputTab:
         self.activity_date_entry = ttk.Entry(activity_date_frame, width=12, font=('Arial', 11))
         self.activity_date_entry.pack(side=tk.LEFT, padx=10)
         self.activity_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        ttk.Button(activity_date_frame, text="Hôm nay", 
+                  command=lambda: self.activity_date_entry.delete(0, tk.END) or 
+                  self.activity_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))).pack(side=tk.LEFT, padx=5)
         
-        # Notes
+        # Activity notes
         activity_notes_frame = ttk.Frame(form_frame)
         activity_notes_frame.pack(fill=tk.X, pady=10)
         
         ttk.Label(activity_notes_frame, text="Ghi chú:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
-        self.activity_notes_entry = tk.Text(activity_notes_frame, height=3, width=50, font=('Arial', 10))
+        self.activity_notes_entry = tk.Text(activity_notes_frame, height=2, width=50, font=('Arial', 10))
         self.activity_notes_entry.pack(fill=tk.X, pady=5)
         
         # Buttons
         activity_button_frame = ttk.Frame(form_frame)
         activity_button_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Button(activity_button_frame, text="📥 Lưu hoạt động", 
-                  command=self.save_activity, style='Accent.TButton').pack(side=tk.LEFT, padx=5)
+        ttk.Button(activity_button_frame, text="💾 Lưu hoạt động", 
+                  command=self.save_activity).pack(side=tk.LEFT, padx=5)
         ttk.Button(activity_button_frame, text="🔄 Làm mới", 
                   command=self.clear_activity_form).pack(side=tk.LEFT, padx=5)
         
-        # Recent entries
-        activity_recent_frame = ttk.LabelFrame(content_frame, text="Hoạt động gần đây", padding="10")
-        activity_recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        # Recent activities
+        recent_activity_frame = ttk.LabelFrame(activity_tab, text="Hoạt động gần đây", padding="10")
+        recent_activity_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        columns = ('date', 'type', 'duration', 'calories', 'intensity')
-        self.activity_tree = ttk.Treeview(activity_recent_frame, columns=columns, show='headings', height=8)
+        # Treeview for recent activities
+        activity_columns = ('date', 'type', 'duration', 'calories', 'intensity')
+        self.activity_tree = ttk.Treeview(recent_activity_frame, columns=activity_columns, show='headings', height=8)
         
+        # Define headings
         self.activity_tree.heading('date', text='Ngày')
         self.activity_tree.heading('type', text='Loại')
         self.activity_tree.heading('duration', text='Thời gian (phút)')
         self.activity_tree.heading('calories', text='Calories')
         self.activity_tree.heading('intensity', text='Cường độ')
         
+        # Define columns
         self.activity_tree.column('date', width=100)
         self.activity_tree.column('type', width=100)
         self.activity_tree.column('duration', width=100)
@@ -228,174 +199,187 @@ class InputTab:
         
         self.activity_tree.pack(fill=tk.BOTH, expand=True)
         
+        # Load recent activities
         self.load_recent_activities()
     
     def setup_sleep_tab(self):
-        """Thiết lập tab nhập giấc ngủ"""
+        """Thiết lập tab nhập dữ liệu giấc ngủ"""
         sleep_tab = ttk.Frame(self.input_notebook)
         self.input_notebook.add(sleep_tab, text="😴 Giấc ngủ")
         
-        # Create scrollable content
-        content_frame = self.create_scrollable_frame(sleep_tab, "sleep")
-        
         # Input form
-        form_frame = ttk.LabelFrame(content_frame, text="Nhập thông tin giấc ngủ", padding="15")
+        form_frame = ttk.LabelFrame(sleep_tab, text="Nhập thông tin giấc ngủ", padding="15")
         form_frame.pack(fill=tk.X, padx=10, pady=10)
         
-        # Sleep hours
-        sleep_hours_frame = ttk.Frame(form_frame)
-        sleep_hours_frame.pack(fill=tk.X, pady=10)
+        # Date input
+        date_frame = ttk.Frame(form_frame)
+        date_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(sleep_hours_frame, text="Giờ ngủ:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
-        self.sleep_hours_entry = ttk.Entry(sleep_hours_frame, width=10, font=('Arial', 11))
+        ttk.Label(date_frame, text="Ngày:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        self.sleep_date_entry = ttk.Entry(date_frame, width=12, font=('Arial', 11))
+        self.sleep_date_entry.pack(side=tk.LEFT, padx=10)
+        self.sleep_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        ttk.Button(date_frame, text="Hôm nay", 
+                  command=lambda: self.sleep_date_entry.delete(0, tk.END) or 
+                                  self.sleep_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))).pack(side=tk.LEFT, padx=5)
+        
+        # Sleep hours input
+        hours_frame = ttk.Frame(form_frame)
+        hours_frame.pack(fill=tk.X, pady=10)
+        
+        ttk.Label(hours_frame, text="Số giờ ngủ:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        self.sleep_hours_entry = ttk.Entry(hours_frame, width=10, font=('Arial', 11))
         self.sleep_hours_entry.pack(side=tk.LEFT, padx=10)
-        ttk.Label(sleep_hours_frame, text="giờ").pack(side=tk.LEFT)
+        ttk.Label(hours_frame, text="giờ").pack(side=tk.LEFT)
         
-        # Sleep quality
+        # Sleep quality dropdown
         quality_frame = ttk.Frame(form_frame)
         quality_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(quality_frame, text="Chất lượng:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        ttk.Label(quality_frame, text="Chất lượng giấc ngủ:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
         self.sleep_quality_combo = ttk.Combobox(quality_frame, 
-                                              values=["Rất tốt", "Tốt", "Trung bình", "Không tốt", "Rất không tốt"],
-                                              width=15, font=('Arial', 11))
+                                               values=["Rất tốt", "Tốt", "Trung bình", "Không tốt", "Rất không tốt"],
+                                               width=15, font=('Arial', 10))
         self.sleep_quality_combo.pack(side=tk.LEFT, padx=10)
         self.sleep_quality_combo.set("Trung bình")
         
-        # Sleep date
-        sleep_date_frame = ttk.Frame(form_frame)
-        sleep_date_frame.pack(fill=tk.X, pady=10)
+        # Notes input
+        notes_frame = ttk.Frame(form_frame)
+        notes_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(sleep_date_frame, text="Ngày:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
-        self.sleep_date_entry = ttk.Entry(sleep_date_frame, width=12, font=('Arial', 11))
-        self.sleep_date_entry.pack(side=tk.LEFT, padx=10)
-        self.sleep_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
-        
-        # Sleep notes
-        sleep_notes_frame = ttk.Frame(form_frame)
-        sleep_notes_frame.pack(fill=tk.X, pady=10)
-        
-        ttk.Label(sleep_notes_frame, text="Ghi chú:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
-        self.sleep_notes_entry = tk.Text(sleep_notes_frame, height=3, width=50, font=('Arial', 10))
+        ttk.Label(notes_frame, text="Ghi chú:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
+        self.sleep_notes_entry = tk.Text(notes_frame, height=3, width=50, font=('Arial', 10))
         self.sleep_notes_entry.pack(fill=tk.X, pady=5)
         
         # Buttons
-        sleep_button_frame = ttk.Frame(form_frame)
-        sleep_button_frame.pack(fill=tk.X, pady=10)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Button(sleep_button_frame, text="📥 Lưu giấc ngủ", 
+        ttk.Button(button_frame, text="📥 Lưu giấc ngủ", 
                   command=self.save_sleep, style='Accent.TButton').pack(side=tk.LEFT, padx=5)
-        ttk.Button(sleep_button_frame, text="🔄 Làm mới", 
+        ttk.Button(button_frame, text="🔄 Làm mới", 
                   command=self.clear_sleep_form).pack(side=tk.LEFT, padx=5)
         
         # Recent entries
-        sleep_recent_frame = ttk.LabelFrame(content_frame, text="Giấc ngủ gần đây", padding="10")
-        sleep_recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        recent_frame = ttk.LabelFrame(sleep_tab, text="Giấc ngủ gần đây", padding="10")
+        recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
+        # Treeview for recent sleep entries
         columns = ('date', 'hours', 'quality', 'status')
-        self.sleep_tree = ttk.Treeview(sleep_recent_frame, columns=columns, show='headings', height=8)
+        self.sleep_tree = ttk.Treeview(recent_frame, columns=columns, show='headings', height=8)
         
+        # Define headings
         self.sleep_tree.heading('date', text='Ngày')
         self.sleep_tree.heading('hours', text='Giờ ngủ')
         self.sleep_tree.heading('quality', text='Chất lượng')
-        self.sleep_tree.heading('status', text='Tình trạng')
+        self.sleep_tree.heading('status', text='Trạng thái')
         
+        # Define columns
         self.sleep_tree.column('date', width=100)
         self.sleep_tree.column('hours', width=80)
-        self.sleep_tree.column('quality', width=120)
+        self.sleep_tree.column('quality', width=100)
         self.sleep_tree.column('status', width=150)
         
         self.sleep_tree.pack(fill=tk.BOTH, expand=True)
         
+        # Load recent sleep records
         self.load_recent_sleep()
     
     def setup_heart_rate_tab(self):
-        """Thiết lập tab nhập nhịp tim"""
+        """Thiết lập tab nhập dữ liệu nhịp tim"""
         hr_tab = ttk.Frame(self.input_notebook)
         self.input_notebook.add(hr_tab, text="❤️ Nhịp tim")
         
-        # Create scrollable content
-        content_frame = self.create_scrollable_frame(hr_tab, "heart_rate")
-        
         # Input form
-        form_frame = ttk.LabelFrame(content_frame, text="Nhập thông tin nhịp tim", padding="15")
+        form_frame = ttk.LabelFrame(hr_tab, text="Nhập thông tin nhịp tim", padding="15")
         form_frame.pack(fill=tk.X, padx=10, pady=10)
         
-        # BPM
+        # Date input
+        date_frame = ttk.Frame(form_frame)
+        date_frame.pack(fill=tk.X, pady=10)
+        
+        ttk.Label(date_frame, text="Ngày:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        self.hr_date_entry = ttk.Entry(date_frame, width=12, font=('Arial', 11))
+        self.hr_date_entry.pack(side=tk.LEFT, padx=10)
+        self.hr_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        ttk.Button(date_frame, text="Hôm nay", 
+                  command=lambda: self.hr_date_entry.delete(0, tk.END) or 
+                                  self.hr_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))).pack(side=tk.LEFT, padx=5)
+        
+        # Time input
+        time_frame = ttk.Frame(form_frame)
+        time_frame.pack(fill=tk.X, pady=10)
+        
+        ttk.Label(time_frame, text="Thời gian:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        self.hr_time_entry = ttk.Entry(time_frame, width=10, font=('Arial', 11))
+        self.hr_time_entry.pack(side=tk.LEFT, padx=10)
+        self.hr_time_entry.insert(0, datetime.now().strftime("%H:%M"))
+        ttk.Button(time_frame, text="Bây giờ", 
+                  command=lambda: self.hr_time_entry.delete(0, tk.END) or 
+                                  self.hr_time_entry.insert(0, datetime.now().strftime("%H:%M"))).pack(side=tk.LEFT, padx=5)
+        
+        # Heart rate (BPM) input
         bpm_frame = ttk.Frame(form_frame)
         bpm_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(bpm_frame, text="BPM:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        ttk.Label(bpm_frame, text="Nhịp tim (BPM):", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
         self.hr_bpm_entry = ttk.Entry(bpm_frame, width=10, font=('Arial', 11))
         self.hr_bpm_entry.pack(side=tk.LEFT, padx=10)
+        ttk.Label(bpm_frame, text="BPM").pack(side=tk.LEFT)
         
-        # Activity type
+        # Activity type dropdown
         activity_frame = ttk.Frame(form_frame)
         activity_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(activity_frame, text="Hoạt động:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
+        ttk.Label(activity_frame, text="Loại hoạt động:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
         self.hr_activity_combo = ttk.Combobox(activity_frame, 
-                                            values=["Nghỉ ngơi", "Nhẹ", "Vừa", "Mạnh", "Tập luyện"],
-                                            width=15, font=('Arial', 11))
+                                             values=["Nghỉ ngơi", "Nhẹ", "Vừa", "Mạnh", "Tập luyện"],
+                                             width=15, font=('Arial', 10))
         self.hr_activity_combo.pack(side=tk.LEFT, padx=10)
         self.hr_activity_combo.set("Nghỉ ngơi")
         
-        # HR date
-        hr_date_frame = ttk.Frame(form_frame)
-        hr_date_frame.pack(fill=tk.X, pady=10)
+        # Notes input
+        notes_frame = ttk.Frame(form_frame)
+        notes_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Label(hr_date_frame, text="Ngày:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
-        self.hr_date_entry = ttk.Entry(hr_date_frame, width=12, font=('Arial', 11))
-        self.hr_date_entry.pack(side=tk.LEFT, padx=10)
-        self.hr_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
-        
-        # HR time
-        hr_time_frame = ttk.Frame(form_frame)
-        hr_time_frame.pack(fill=tk.X, pady=10)
-        
-        ttk.Label(hr_time_frame, text="Thời gian:", font=('Arial', 11, 'bold')).pack(side=tk.LEFT)
-        self.hr_time_entry = ttk.Entry(hr_time_frame, width=12, font=('Arial', 11))
-        self.hr_time_entry.pack(side=tk.LEFT, padx=10)
-        self.hr_time_entry.insert(0, datetime.now().strftime("%H:%M"))
-        
-        # HR notes
-        hr_notes_frame = ttk.Frame(form_frame)
-        hr_notes_frame.pack(fill=tk.X, pady=10)
-        
-        ttk.Label(hr_notes_frame, text="Ghi chú:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
-        self.hr_notes_entry = tk.Text(hr_notes_frame, height=3, width=50, font=('Arial', 10))
+        ttk.Label(notes_frame, text="Ghi chú:", font=('Arial', 11, 'bold')).pack(anchor=tk.W)
+        self.hr_notes_entry = tk.Text(notes_frame, height=3, width=50, font=('Arial', 10))
         self.hr_notes_entry.pack(fill=tk.X, pady=5)
         
         # Buttons
-        hr_button_frame = ttk.Frame(form_frame)
-        hr_button_frame.pack(fill=tk.X, pady=10)
+        button_frame = ttk.Frame(form_frame)
+        button_frame.pack(fill=tk.X, pady=10)
         
-        ttk.Button(hr_button_frame, text="📥 Lưu nhịp tim", 
+        ttk.Button(button_frame, text="❤️ Lưu nhịp tim", 
                   command=self.save_heart_rate, style='Accent.TButton').pack(side=tk.LEFT, padx=5)
-        ttk.Button(hr_button_frame, text="🔄 Làm mới", 
+        ttk.Button(button_frame, text="🔄 Làm mới", 
                   command=self.clear_heart_rate_form).pack(side=tk.LEFT, padx=5)
         
         # Recent entries
-        hr_recent_frame = ttk.LabelFrame(content_frame, text="Nhịp tim gần đây", padding="10")
-        hr_recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        recent_frame = ttk.LabelFrame(hr_tab, text="Nhịp tim gần đây", padding="10")
+        recent_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
+        # Treeview for recent heart rate entries
         columns = ('date', 'time', 'bpm', 'activity', 'status')
-        self.hr_tree = ttk.Treeview(hr_recent_frame, columns=columns, show='headings', height=8)
+        self.hr_tree = ttk.Treeview(recent_frame, columns=columns, show='headings', height=8)
         
+        # Define headings
         self.hr_tree.heading('date', text='Ngày')
         self.hr_tree.heading('time', text='Thời gian')
-        self.hr_tree.heading('bpm', text='BPM')
+        self.hr_tree.heading('bpm', text='Nhịp tim (BPM)')
         self.hr_tree.heading('activity', text='Hoạt động')
-        self.hr_tree.heading('status', text='Tình trạng')
+        self.hr_tree.heading('status', text='Trạng thái')
         
-        self.hr_tree.column('date', width=100)
+        # Define columns
+        self.hr_tree.column('date', width=80)
         self.hr_tree.column('time', width=80)
         self.hr_tree.column('bpm', width=80)
-        self.hr_tree.column('activity', width=100)
+        self.hr_tree.column('activity', width=80)
         self.hr_tree.column('status', width=120)
         
         self.hr_tree.pack(fill=tk.BOTH, expand=True)
         
+        # Load recent heart rate records
         self.load_recent_heart_rate()
     
     def setup_device_tab(self):
@@ -403,11 +387,8 @@ class InputTab:
         device_tab = ttk.Frame(self.input_notebook)
         self.input_notebook.add(device_tab, text="📱 Thiết bị")
         
-        # Create scrollable content
-        content_frame = self.create_scrollable_frame(device_tab, "device")
-        
         # Device simulation section
-        sim_frame = ttk.LabelFrame(content_frame, text="Giả lập Thiết bị Đo", padding="15")
+        sim_frame = ttk.LabelFrame(device_tab, text="Giả lập Thiết bị Đo", padding="15")
         sim_frame.pack(fill=tk.X, padx=10, pady=10)
         
         # Description
@@ -456,7 +437,7 @@ class InputTab:
         self.device_status.pack(anchor=tk.W, pady=5)
         
         # Historical data generation
-        hist_frame = ttk.LabelFrame(content_frame, text="Tạo dữ liệu Lịch sử", padding="15")
+        hist_frame = ttk.LabelFrame(device_tab, text="Tạo dữ liệu Lịch sử", padding="15")
         hist_frame.pack(fill=tk.X, padx=10, pady=10)
         
         ttk.Label(hist_frame, text="Tạo dữ liệu mẫu cho 30 ngày qua:",
@@ -472,16 +453,19 @@ class InputTab:
         self.hist_status.pack(anchor=tk.W, pady=5)
     
     def set_today_date(self):
-        """Đặt ngày hôm nay"""
+        """Đặt ngày hôm nay cho trường ngày"""
         self.date_entry.delete(0, tk.END)
         self.date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
     
     def save_weight(self):
-        """Lưu cân nặng"""
+        """Lưu thông tin cân nặng"""
         try:
+            # Get data from form
             weight_str = self.weight_entry.get().strip()
+            date = self.date_entry.get().strip()
             notes = self.notes_entry.get("1.0", tk.END).strip()
             
+            # Validation
             if not weight_str:
                 messagebox.showerror("Lỗi", "Vui lòng nhập cân nặng")
                 return
@@ -492,29 +476,62 @@ class InputTab:
                 messagebox.showerror("Lỗi", "Cân nặng phải là số")
                 return
             
-            success = self.db.add_weight_record(
+            # Validate data
+            is_valid, message = HealthDataValidator.validate_weight(weight)
+            if not is_valid:
+                messagebox.showerror("Lỗi", message)
+                return
+            
+            if date:
+                is_valid, message = HealthDataValidator.validate_date(date)
+                if not is_valid:
+                    messagebox.showerror("Lỗi", message)
+                    return
+            
+            # Save to database
+            bmi = self.db.add_weight_record(
                 user_id=self.user['user_id'],
-                weight=weight
+                weight=weight,
+                date=date if date else None,
+                notes=notes if notes else None
             )
             
-            if success:
-                messagebox.showinfo("Thành công", f"Đã lưu cân nặng: {weight} kg")
-                self.clear_weight_form()
+            if bmi is not None:
+                # Show BMI result
+                from utils.bmi_calculator import BMICalculator
+                category = BMICalculator.get_bmi_category(bmi)
+                
+                messagebox.showinfo("Thành công", 
+                                  f"Đã lưu cân nặng: {weight} kg\n"
+                                  f"BMI: {bmi} - {category['category']}")
+                
+                # Clear form
+                self.weight_entry.delete(0, tk.END)
+                self.notes_entry.delete("1.0", tk.END)
+                
+                # Refresh data
                 self.load_recent_weights()
                 self.main_window.refresh_all()
+                self.main_window.set_status(f"Đã lưu cân nặng: {weight} kg")
+                
             else:
                 messagebox.showerror("Lỗi", "Không thể lưu cân nặng")
+                
         except Exception as e:
             self.logger.error(f"Error saving weight: {e}")
             messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
     
     def save_activity(self):
-        """Lưu hoạt động"""
+        """Lưu thông tin hoạt động"""
         try:
+            # Get data from form
             activity_type = self.activity_combo.get().strip()
             duration_str = self.duration_entry.get().strip()
             intensity = self.intensity_combo.get().strip()
+            date = self.activity_date_entry.get().strip()
+            notes = self.activity_notes_entry.get("1.0", tk.END).strip()
             
+            # Validation
             if not activity_type:
                 messagebox.showerror("Lỗi", "Vui lòng chọn loại hoạt động")
                 return
@@ -529,101 +546,128 @@ class InputTab:
                 messagebox.showerror("Lỗi", "Thời gian phải là số nguyên")
                 return
             
-            if duration <= 0:
-                messagebox.showerror("Lỗi", "Thời gian phải lớn hơn 0")
+            # Validate data
+            is_valid, message = HealthDataValidator.validate_activity_type(activity_type)
+            if not is_valid:
+                messagebox.showerror("Lỗi", message)
                 return
             
-            # Calculate calories (basic estimate)
-            calorie_rates = {
-                "Đi bộ": 4,
-                "Chạy bộ": 10,
-                "Đạp xe": 8,
-                "Bơi lội": 9,
-                "Gym": 7,
-                "Yoga": 4,
-                "Nhảy dây": 11,
-                "Leo cầu thang": 9
-            }
-            calories = duration * calorie_rates.get(activity_type, 5)
+            is_valid, message = HealthDataValidator.validate_activity_duration(duration)
+            if not is_valid:
+                messagebox.showerror("Lỗi", message)
+                return
             
+            if date:
+                is_valid, message = HealthDataValidator.validate_date(date)
+                if not is_valid:
+                    messagebox.showerror("Lỗi", message)
+                    return
+            
+            # Calculate calories (rough estimate)
+            calorie_rates = {
+                "Đi bộ": 5, "Chạy bộ": 10, "Đạp xe": 8, 
+                "Bơi lội": 9, "Gym": 7, "Yoga": 4, 
+                "Nhảy dây": 11, "Leo cầu thang": 9
+            }
+            base_rate = calorie_rates.get(activity_type, 5)
+            
+            # Adjust for intensity
+            intensity_multiplier = {"low": 0.8, "medium": 1.0, "high": 1.2}
+            calories_burned = round(base_rate * duration * intensity_multiplier.get(intensity, 1.0))
+            
+            # Save to database
             success = self.db.add_activity(
                 user_id=self.user['user_id'],
                 activity_type=activity_type,
                 duration=duration,
-                calories_burned=calories,
-                intensity=intensity
+                calories_burned=calories_burned,
+                intensity=intensity,
+                date=date if date else None,
+                notes=notes if notes else None
             )
             
             if success:
-                messagebox.showinfo("Thành công", f"Đã lưu: {activity_type} - {duration} phút")
-                self.clear_activity_form()
+                messagebox.showinfo("Thành công", 
+                                  f"Đã lưu hoạt động: {activity_type}\n"
+                                  f"Thời gian: {duration} phút\n"
+                                  f"Calories: {calories_burned}")
+                
+                # Clear form
+                self.duration_entry.delete(0, tk.END)
+                self.duration_entry.insert(0, "30")
+                self.activity_notes_entry.delete("1.0", tk.END)
+                
+                # Refresh data
                 self.load_recent_activities()
                 self.main_window.refresh_all()
+                self.main_window.set_status(f"Đã lưu hoạt động: {activity_type}")
+                
             else:
                 messagebox.showerror("Lỗi", "Không thể lưu hoạt động")
+                
         except Exception as e:
             self.logger.error(f"Error saving activity: {e}")
             messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
     
     def clear_weight_form(self):
-        """Xóa form cân nặng"""
+        """Xóa form nhập cân nặng"""
         self.weight_entry.delete(0, tk.END)
         self.notes_entry.delete("1.0", tk.END)
-        self.date_entry.delete(0, tk.END)
-        self.date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
+        self.set_today_date()
     
     def clear_activity_form(self):
-        """Xóa form hoạt động"""
-        self.activity_combo.set("Đi bộ")
+        """Xóa form nhập hoạt động"""
         self.duration_entry.delete(0, tk.END)
         self.duration_entry.insert(0, "30")
-        self.intensity_combo.set("medium")
         self.activity_notes_entry.delete("1.0", tk.END)
+        self.activity_date_entry.delete(0, tk.END)
+        self.activity_date_entry.insert(0, datetime.now().strftime("%Y-%m-%d"))
     
     def load_recent_weights(self):
         """Tải cân nặng gần đây"""
-        try:
-            for item in self.weight_tree.get_children():
-                self.weight_tree.delete(item)
-            
-            records = self.db.get_weight_records(self.user['user_id'], days=30)
-            if records:
-                for record in records:
-                    category = BMICalculator.get_bmi_category(record['bmi'])['category']
-                    self.weight_tree.insert('', 0, values=(
-                        record['date'],
-                        record['weight'],
-                        record['bmi'],
-                        category
-                    ))
-        except Exception as e:
-            self.logger.error(f"Error loading weights: {e}")
+        # Clear existing data
+        for item in self.weight_tree.get_children():
+            self.weight_tree.delete(item)
+        
+        # Get recent weights
+        weights = self.db.get_weight_records(self.user['user_id'], days=30)
+        
+        from utils.bmi_calculator import BMICalculator
+        
+        for weight_data in weights[:10]:  # Show last 10 entries
+            category = BMICalculator.get_bmi_category(weight_data['bmi'])
+            self.weight_tree.insert('', 'end', values=(
+                weight_data['date'],
+                weight_data['weight'],
+                weight_data['bmi'],
+                category['category']
+            ))
     
     def load_recent_activities(self):
         """Tải hoạt động gần đây"""
-        try:
-            for item in self.activity_tree.get_children():
-                self.activity_tree.delete(item)
-            
-            records = self.db.get_activities(self.user['user_id'], days=30)
-            if records:
-                for record in records:
-                    self.activity_tree.insert('', 0, values=(
-                        record['date'],
-                        record['activity_type'],
-                        record['duration'],
-                        record['calories_burned'],
-                        record['intensity']
-                    ))
-        except Exception as e:
-            self.logger.error(f"Error loading activities: {e}")
+        # Clear existing data
+        for item in self.activity_tree.get_children():
+            self.activity_tree.delete(item)
+        
+        # Get recent activities
+        activities = self.db.get_activities(self.user['user_id'], days=30)
+        
+        for activity in activities[:10]:  # Show last 10 entries
+            self.activity_tree.insert('', 'end', values=(
+                activity['date'],
+                activity['activity_type'],
+                activity['duration'],
+                activity['calories_burned'] or '--',
+                activity['intensity'] or 'medium'
+            ))
     
     def simulate_weight(self):
-        """Giả lập cân nặng"""
+        """Giả lập dữ liệu cân nặng"""
         try:
             trend = self.trend_combo.get()
             measurement = self.device_simulator.generate_weight_measurement(trend)
             
+            # Save to database
             bmi = self.db.add_weight_record(
                 user_id=self.user['user_id'],
                 weight=measurement['weight']
@@ -638,16 +682,18 @@ class InputTab:
                 self.main_window.refresh_all()
             else:
                 self.device_status.config(text="Lỗi khi lưu cân nặng", foreground='red')
+                
         except Exception as e:
             self.logger.error(f"Error simulating weight: {e}")
             self.device_status.config(text=f"Lỗi: {e}", foreground='red')
     
     def simulate_activity(self):
-        """Giả lập hoạt động"""
+        """Giả lập dữ liệu hoạt động"""
         try:
             self.device_simulator.set_activity_intensity(self.sim_intensity_combo.get())
             activity_data = self.device_simulator.generate_activity_data()
             
+            # Save to database
             success = self.db.add_activity(
                 user_id=self.user['user_id'],
                 activity_type=activity_data['activity_type'],
@@ -665,15 +711,17 @@ class InputTab:
                 self.main_window.refresh_all()
             else:
                 self.device_status.config(text="Lỗi khi lưu hoạt động", foreground='red')
+                
         except Exception as e:
             self.logger.error(f"Error simulating activity: {e}")
             self.device_status.config(text=f"Lỗi: {e}", foreground='red')
     
     def simulate_sleep(self):
-        """Giả lập giấc ngủ"""
+        """Giả lập dữ liệu giấc ngủ"""
         try:
             sleep_data = self.device_simulator.generate_sleep_data()
             
+            # Map quality to Vietnamese
             quality_map = {
                 'poor': 'Rất không tốt',
                 'fair': 'Không tốt',
@@ -682,6 +730,7 @@ class InputTab:
             }
             sleep_quality = quality_map.get(sleep_data['sleep_quality'], 'Trung bình')
             
+            # Save to database
             success = self.db.add_sleep_record(
                 user_id=self.user['user_id'],
                 record_date=datetime.now().strftime("%Y-%m-%d"),
@@ -699,22 +748,24 @@ class InputTab:
                 self.main_window.refresh_all()
             else:
                 self.device_status.config(text="Lỗi khi lưu giấc ngủ", foreground='red')
+                
         except Exception as e:
             self.logger.error(f"Error simulating sleep: {e}")
             self.device_status.config(text=f"Lỗi: {e}", foreground='red')
     
     def simulate_heart_rate(self):
-        """Giả lập nhịp tim"""
+        """Giả lập dữ liệu nhịp tim"""
         try:
             hr_data = self.device_simulator.generate_heart_rate_data()
             
+            # Save to database
             success = self.db.add_heart_rate_record(
                 user_id=self.user['user_id'],
                 record_date=datetime.now().strftime("%Y-%m-%d"),
                 record_time=datetime.now().strftime("%H:%M"),
                 bpm=hr_data['resting_heart_rate'],
                 activity_type='Nghỉ ngơi',
-                notes=f"Giả lập - Zone: {hr_data['heart_rate_zone']}, Tối đa: {hr_data['max_heart_rate']}"
+                notes=f"Giả lập - BPM tối đa: {hr_data['max_heart_rate']}, Bình thường: {hr_data['average_heart_rate']}"
             )
             
             if success:
@@ -726,12 +777,13 @@ class InputTab:
                 self.main_window.refresh_all()
             else:
                 self.device_status.config(text="Lỗi khi lưu nhịp tim", foreground='red')
+                
         except Exception as e:
             self.logger.error(f"Error simulating heart rate: {e}")
             self.device_status.config(text=f"Lỗi: {e}", foreground='red')
     
     def simulate_all(self):
-        """Giả lập tất cả"""
+        """Giả lập cả cân nặng và hoạt động"""
         self.simulate_weight()
         self.simulate_activity()
         self.simulate_sleep()
@@ -743,13 +795,6 @@ class InputTab:
             historical_data = self.device_simulator.generate_historical_data(days=30)
             
             saved_count = 0
-            quality_map = {
-                'poor': 'Rất không tốt',
-                'fair': 'Không tốt',
-                'good': 'Tốt',
-                'excellent': 'Rất tốt'
-            }
-            
             for day_data in historical_data:
                 # Save weight
                 weight_bmi = self.db.add_weight_record(
@@ -771,45 +816,17 @@ class InputTab:
                     if activity_success:
                         saved_count += 1
                 
-                # Generate and save sleep data
-                sleep_data = self.device_simulator.generate_sleep_data()
-                sleep_quality = quality_map.get(sleep_data['sleep_quality'], 'Trung bình')
-                sleep_success = self.db.add_sleep_record(
-                    user_id=self.user['user_id'],
-                    record_date=day_data['date'],
-                    sleep_hours=sleep_data['sleep_hours'],
-                    sleep_quality=sleep_quality,
-                    notes=f"Mẫu - Ngủ sâu: {sleep_data['deep_sleep_hours']}h, REM: {sleep_data['rem_sleep_hours']}h"
-                )
-                if sleep_success:
-                    saved_count += 1
-                
-                # Generate and save heart rate data
-                hr_data = self.device_simulator.generate_heart_rate_data()
-                hr_success = self.db.add_heart_rate_record(
-                    user_id=self.user['user_id'],
-                    record_date=day_data['date'],
-                    record_time=f"{random.randint(6, 22):02d}:{random.randint(0, 59):02d}",
-                    bpm=hr_data['resting_heart_rate'],
-                    activity_type='Nghỉ ngơi',
-                    notes=f"Mẫu - Zone: {hr_data['heart_rate_zone']}, Tối đa: {hr_data['max_heart_rate']}"
-                )
-                if hr_success:
-                    saved_count += 1
-                
                 if weight_bmi:
                     saved_count += 1
             
             self.hist_status.config(
-                text=f"Đã tạo {saved_count} bản ghi dữ liệu mẫu cho 30 ngày (cân nặng, hoạt động, giấc ngủ, nhịp tim)",
+                text=f"Đã tạo {saved_count} bản ghi dữ liệu mẫu cho 30 ngày",
                 foreground='green'
             )
             
             # Refresh data
             self.load_recent_weights()
             self.load_recent_activities()
-            self.load_recent_sleep()
-            self.load_recent_heart_rate()
             self.main_window.refresh_all()
             
         except Exception as e:
@@ -817,13 +834,15 @@ class InputTab:
             self.hist_status.config(text=f"Lỗi: {e}", foreground='red')
     
     def save_sleep(self):
-        """Lưu giấc ngủ"""
+        """Lưu thông tin giấc ngủ"""
         try:
+            # Get data from form
             sleep_hours_str = self.sleep_hours_entry.get().strip()
             quality = self.sleep_quality_combo.get().strip()
             date = self.sleep_date_entry.get().strip()
             notes = self.sleep_notes_entry.get("1.0", tk.END).strip()
             
+            # Validation
             if not sleep_hours_str:
                 messagebox.showerror("Lỗi", "Vui lòng nhập số giờ ngủ")
                 return
@@ -842,6 +861,7 @@ class InputTab:
                 messagebox.showerror("Lỗi", "Vui lòng chọn chất lượng giấc ngủ")
                 return
             
+            # Save to database
             success = self.db.add_sleep_record(
                 user_id=self.user['user_id'],
                 record_date=date if date else datetime.now().strftime("%Y-%m-%d"),
@@ -851,25 +871,36 @@ class InputTab:
             )
             
             if success:
-                messagebox.showinfo("Thành công", f"Đã lưu: {sleep_hours:.1f} giờ - {quality}")
+                messagebox.showinfo("Thành công", 
+                                  f"Đã lưu giấc ngủ: {sleep_hours} giờ\n"
+                                  f"Chất lượng: {quality}")
+                
+                # Clear form
                 self.clear_sleep_form()
+                
+                # Refresh data
                 self.load_recent_sleep()
                 self.main_window.refresh_all()
+                self.main_window.set_status(f"Đã lưu giấc ngủ: {sleep_hours} giờ")
+                
             else:
                 messagebox.showerror("Lỗi", "Không thể lưu giấc ngủ")
+                
         except Exception as e:
             self.logger.error(f"Error saving sleep: {e}")
             messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
     
     def save_heart_rate(self):
-        """Lưu nhịp tim"""
+        """Lưu thông tin nhịp tim"""
         try:
+            # Get data from form
             bpm_str = self.hr_bpm_entry.get().strip()
             activity = self.hr_activity_combo.get().strip()
             date = self.hr_date_entry.get().strip()
             time = self.hr_time_entry.get().strip()
             notes = self.hr_notes_entry.get("1.0", tk.END).strip()
             
+            # Validation
             if not bpm_str:
                 messagebox.showerror("Lỗi", "Vui lòng nhập nhịp tim")
                 return
@@ -888,6 +919,7 @@ class InputTab:
                 messagebox.showerror("Lỗi", "Vui lòng chọn loại hoạt động")
                 return
             
+            # Save to database
             success = self.db.add_heart_rate_record(
                 user_id=self.user['user_id'],
                 record_date=date if date else datetime.now().strftime("%Y-%m-%d"),
@@ -898,18 +930,27 @@ class InputTab:
             )
             
             if success:
-                messagebox.showinfo("Thành công", f"Đã lưu nhịp tim: {bpm} BPM\nHoạt động: {activity}")
+                messagebox.showinfo("Thành công", 
+                                  f"Đã lưu nhịp tim: {bpm} BPM\n"
+                                  f"Hoạt động: {activity}")
+                
+                # Clear form
                 self.clear_heart_rate_form()
+                
+                # Refresh data
                 self.load_recent_heart_rate()
                 self.main_window.refresh_all()
+                self.main_window.set_status(f"Đã lưu nhịp tim: {bpm} BPM")
+                
             else:
                 messagebox.showerror("Lỗi", "Không thể lưu nhịp tim")
+                
         except Exception as e:
             self.logger.error(f"Error saving heart rate: {e}")
             messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
     
     def clear_sleep_form(self):
-        """Xóa form giấc ngủ"""
+        """Xóa dữ liệu form giấc ngủ"""
         self.sleep_hours_entry.delete(0, tk.END)
         self.sleep_notes_entry.delete("1.0", tk.END)
         self.sleep_date_entry.delete(0, tk.END)
@@ -917,7 +958,7 @@ class InputTab:
         self.sleep_quality_combo.set("Trung bình")
     
     def clear_heart_rate_form(self):
-        """Xóa form nhịp tim"""
+        """Xóa dữ liệu form nhịp tim"""
         self.hr_bpm_entry.delete(0, tk.END)
         self.hr_notes_entry.delete("1.0", tk.END)
         self.hr_date_entry.delete(0, tk.END)
@@ -927,55 +968,69 @@ class InputTab:
         self.hr_activity_combo.set("Nghỉ ngơi")
     
     def load_recent_sleep(self):
-        """Tải giấc ngủ gần đây"""
+        """Tải danh sách giấc ngủ gần đây"""
         try:
+            # Clear treeview
             for item in self.sleep_tree.get_children():
                 self.sleep_tree.delete(item)
             
-            from models.sleep import SleepRecord
+            # Load records from database
             records = self.db.get_sleep_records(self.user['user_id'], days=30)
-            if records:
-                for record in records:
-                    sleep_rec = SleepRecord(
-                        user_id=record['user_id'],
-                        record_date=record['record_date'],
-                        sleep_hours=record['sleep_hours'],
-                        sleep_quality=record['sleep_quality']
-                    )
-                    status = sleep_rec.get_health_status()
-                    self.sleep_tree.insert('', 0, values=(
-                        record['record_date'],
-                        record['sleep_hours'],
-                        record['sleep_quality'],
-                        status
-                    ))
+            
+            for record in records:
+                from models.sleep import SleepRecord
+                
+                # Get health status
+                sleep_rec = SleepRecord(
+                    user_id=record['user_id'],
+                    record_date=record['record_date'],
+                    sleep_hours=record['sleep_hours'],
+                    sleep_quality=record['sleep_quality']
+                )
+                status = sleep_rec.get_health_status()
+                
+                self.sleep_tree.insert('', 'end', values=(
+                    record['record_date'],
+                    f"{record['sleep_hours']:.1f}h",
+                    record['sleep_quality'],
+                    status
+                ))
+                
         except Exception as e:
-            self.logger.error(f"Error loading sleep: {e}")
+            self.logger.error(f"Error loading recent sleep: {e}")
     
     def load_recent_heart_rate(self):
-        """Tải nhịp tim gần đây"""
+        """Tải danh sách nhịp tim gần đây"""
         try:
+            # Clear treeview
             for item in self.hr_tree.get_children():
                 self.hr_tree.delete(item)
             
-            from models.heart_rate import HeartRateRecord
+            # Load records from database
             records = self.db.get_heart_rate_records(self.user['user_id'], days=30)
-            if records:
-                for record in records:
-                    hr_rec = HeartRateRecord(
-                        user_id=record['user_id'],
-                        record_date=record['record_date'],
-                        record_time=record['record_time'],
-                        bpm=record['bpm'],
-                        activity_type=record['activity_type']
-                    )
-                    status = hr_rec.get_health_status()
-                    self.hr_tree.insert('', 0, values=(
-                        record['record_date'],
-                        record['record_time'],
-                        record['bpm'],
-                        record['activity_type'],
-                        status
-                    ))
+            
+            for record in records:
+                from models.heart_rate import HeartRateRecord
+                
+                # Get health status
+                hr_rec = HeartRateRecord(
+                    user_id=record['user_id'],
+                    record_date=record['record_date'],
+                    record_time=record['record_time'],
+                    bpm=record['bpm'],
+                    activity_type=record['activity_type']
+                )
+                status = hr_rec.get_health_status()
+                
+                self.hr_tree.insert('', 'end', values=(
+                    record['record_date'],
+                    record['record_time'],
+                    f"{record['bpm']} BPM",
+                    record['activity_type'],
+                    status
+                ))
+                
         except Exception as e:
-            self.logger.error(f"Error loading heart rate: {e}")
+            self.logger.error(f"Error loading recent heart rate: {e}")
+
+            self.hist_status.config(text=f"Lỗi: {e}", foreground='red')

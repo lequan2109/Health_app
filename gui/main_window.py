@@ -10,6 +10,7 @@ from .components.dashboard_tab import DashboardTab
 from .components.input_tab import InputTab
 from .components.charts_tab import ChartsTab
 from .components.history_tab import HistoryTab
+from .theme import AppTheme
 
 class MainWindow:
     """Cửa sổ chính của ứng dụng"""
@@ -35,29 +36,18 @@ class MainWindow:
         """Thiết lập cửa sổ chính"""
         self.root = tk.Tk()
         self.root.title(f"Health Tracker - {self.user['full_name']}")
-        self.root.geometry("1200x800")
-        self.root.minsize(1000, 700)
+        self.root.geometry("1400x900")
+        self.root.minsize(1200, 800)
         
-        # Configure styles
-        self.setup_styles()
+        # Cấu hình theme
+        AppTheme.configure_styles(self.root)
         
         # Center window
         self.root.eval('tk::PlaceWindow . center')
     
     def setup_styles(self):
         """Thiết lập styles cho giao diện"""
-        style = ttk.Style()
-        
-        # Configure styles
-        style.configure('Main.TFrame', background='#f5f5f5')
-        style.configure('Header.TFrame', background='#2c3e50')
-        style.configure('Header.TLabel', background='#2c3e50', foreground='white', font=('Arial', 12, 'bold'))
-        style.configure('Title.TLabel', font=('Arial', 16, 'bold'), background='#f5f5f5')
-        style.configure('Accent.TButton', font=('Arial', 10, 'bold'))
-        
-        # Tab styles
-        style.configure('Custom.TNotebook', background='#f5f5f5')
-        style.configure('Custom.TNotebook.Tab', font=('Arial', 10, 'bold'), padding=[15, 5])
+        # Theme đã được cấu hình ở setup_window
     
     def setup_ui(self):
         """Thiết lập giao diện người dùng"""
@@ -95,13 +85,23 @@ class MainWindow:
         stats_frame = ttk.Frame(header_frame, style='Header.TFrame')
         stats_frame.pack(side=tk.RIGHT, padx=20, pady=10)
         
+        # Edit profile button
+        edit_profile_btn = ttk.Button(stats_frame, text="⚙️ Cập nhật hồ sơ", 
+                                     command=self.open_profile_window, style='Accent.TButton')
+        edit_profile_btn.pack(side=tk.RIGHT, padx=(0, 10))
+        
+        # Logout button
+        logout_btn = ttk.Button(stats_frame, text="🚪 Đăng xuất", 
+                               command=self.logout, style='Accent.TButton')
+        logout_btn.pack(side=tk.RIGHT, padx=(0, 15))
+        
         self.current_weight_label = ttk.Label(stats_frame, text="Cân nặng: -- kg", 
                                             style='Header.TLabel')
-        self.current_weight_label.pack(anchor=tk.E)
+        self.current_weight_label.pack(side=tk.RIGHT, anchor=tk.E, padx=(0, 20))
         
         self.current_bmi_label = ttk.Label(stats_frame, text="BMI: --", 
                                          style='Header.TLabel')
-        self.current_bmi_label.pack(anchor=tk.E)
+        self.current_bmi_label.pack(side=tk.RIGHT, anchor=tk.E, padx=(0, 10))
     
     def setup_tabs(self, parent):
         """Thiết lập hệ thống tab"""
@@ -206,7 +206,37 @@ class MainWindow:
         """Chạy ứng dụng"""
         self.root.mainloop()
     
+    def logout(self):
+        """Xử lý đăng xuất"""
+        result = messagebox.askyesno("Đăng xuất", "Bạn có chắc chắn muốn đăng xuất?")
+        if result:
+            self.logger.info(f"User logged out: {self.user['username']}")
+            self.cleanup()
+            
+            # Open login window again
+            from .login_window import LoginWindow
+            login_window = LoginWindow(self.db)
+            login_window.run()
+    
+    def open_profile_window(self):
+        """Mở cửa sổ cập nhật hồ sơ"""
+        from .profile_window import ProfileWindow
+        
+        def on_update(updated_user):
+            """Callback khi cập nhật hồ sơ"""
+            self.user = updated_user
+            # Cập nhật lại header
+            self.root.title(f"Health Tracker - {self.user['full_name']}")
+            # Tạo lại header với thông tin mới
+            for widget in self.root.winfo_children():
+                if isinstance(widget, ttk.Frame):
+                    widget.pack_forget()
+            self.setup_ui()
+            self.set_status("Cập nhật hồ sơ thành công")
+        
+        profile_window = ProfileWindow(self.root, self.db, self.user, on_update)
+    
     def cleanup(self):
         """Dọn dẹp tài nguyên"""
         if hasattr(self, 'root'):
-            self.root.quit()
+            self.root.destroy()

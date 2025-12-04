@@ -154,6 +154,124 @@ class AlertSystem:
         
         return alerts
     
+    def check_sleep_alerts(self, user_id: int) -> List[Dict]:
+        """Kiểm tra cảnh báo về giấc ngủ"""
+        alerts = []
+        
+        try:
+            # Lấy bản ghi giấc ngủ 7 ngày gần nhất
+            recent_records = self.db.get_sleep_records(user_id, days=7)
+            
+            if not recent_records:
+                return alerts
+            
+            # Tính giờ ngủ trung bình
+            sleep_hours = [record['sleep_hours'] for record in recent_records]
+            avg_sleep = sum(sleep_hours) / len(sleep_hours)
+            
+            # Kiểm tra thiếu ngủ
+            if avg_sleep < 6:
+                alerts.append({
+                    'type': 'insufficient_sleep',
+                    'message': f'😴 Cảnh báo: Trung bình {avg_sleep:.1f}h/ngày - Thiếu ngủ nghiêm trọng!',
+                    'level': 'danger',
+                    'icon': '🚨'
+                })
+            elif avg_sleep < 7:
+                alerts.append({
+                    'type': 'low_sleep',
+                    'message': f'😴 Cảnh báo: Trung bình {avg_sleep:.1f}h/ngày - Hơi thiếu ngủ',
+                    'level': 'warning',
+                    'icon': '⚠️'
+                })
+            elif avg_sleep > 9:
+                alerts.append({
+                    'type': 'excessive_sleep',
+                    'message': f'😴 Cảnh báo: Trung bình {avg_sleep:.1f}h/ngày - Ngủ quá nhiều',
+                    'level': 'warning',
+                    'icon': '⚠️'
+                })
+            
+            # Kiểm tra chất lượng giấc ngủ
+            quality_count = {}
+            for record in recent_records:
+                quality = record['sleep_quality']
+                quality_count[quality] = quality_count.get(quality, 0) + 1
+            
+            bad_quality = quality_count.get('Không tốt', 0) + quality_count.get('Rất không tốt', 0)
+            if bad_quality >= 3:
+                alerts.append({
+                    'type': 'poor_sleep_quality',
+                    'message': f'😴 Chất lượng giấc ngủ kém: {bad_quality}/7 ngày',
+                    'level': 'warning',
+                    'icon': '⚠️'
+                })
+                
+        except Exception as e:
+            self.logger.error(f"Error checking sleep alerts: {e}")
+        
+        return alerts
+    
+    def check_heart_rate_alerts(self, user_id: int) -> List[Dict]:
+        """Kiểm tra cảnh báo về nhịp tim"""
+        alerts = []
+        
+        try:
+            # Lấy nhịp tim mới nhất
+            latest = self.db.get_latest_heart_rate(user_id)
+            if not latest:
+                return alerts
+            
+            bpm = latest['bpm']
+            activity = latest['activity_type']
+            
+            # Kiểm tra nhịp tim bất thường
+            if bpm < 40:
+                alerts.append({
+                    'type': 'bradycardia',
+                    'message': f'❤️ Cảnh báo: Nhịp tim {bpm} BPM - Quá chậm (Bradycardia)',
+                    'level': 'danger',
+                    'icon': '🚨'
+                })
+            elif bpm < 60:
+                alerts.append({
+                    'type': 'low_heart_rate',
+                    'message': f'❤️ Cảnh báo: Nhịp tim {bpm} BPM - Hơi chậm',
+                    'level': 'warning',
+                    'icon': '⚠️'
+                })
+            elif bpm > 120:
+                alerts.append({
+                    'type': 'tachycardia',
+                    'message': f'❤️ Cảnh báo: Nhịp tim {bpm} BPM - Quá nhanh (Tachycardia)',
+                    'level': 'danger',
+                    'icon': '🚨'
+                })
+            elif bpm > 100 and activity == "Nghỉ ngơi":
+                alerts.append({
+                    'type': 'elevated_resting_heart_rate',
+                    'message': f'❤️ Cảnh báo: Nhịp tim {bpm} BPM khi nghỉ ngơi - Hơi nhanh',
+                    'level': 'warning',
+                    'icon': '⚠️'
+                })
+            
+            # Kiểm tra thay đổi đột ngột nhịp tim (so sánh với hôm trước)
+            recent = self.db.get_heart_rate_records(user_id, days=2)
+            if len(recent) >= 2:
+                hr_change = abs(recent[0]['bpm'] - recent[1]['bpm'])
+                if hr_change > 30:  # thay đổi > 30 BPM trong ngày
+                    alerts.append({
+                        'type': 'heart_rate_spike',
+                        'message': f'❤️ Cảnh báo: Nhịp tim thay đổi {hr_change} BPM',
+                        'level': 'warning',
+                        'icon': '⚠️'
+                    })
+                
+        except Exception as e:
+            self.logger.error(f"Error checking heart rate alerts: {e}")
+        
+        return alerts
+    
     def get_all_alerts(self, user_id: int, current_weight: float = None, current_bmi: float = None) -> List[Dict]:
         """Lấy tất cả cảnh báo"""
         all_alerts = []
@@ -171,6 +289,12 @@ class AlertSystem:
         
         # Kiểm tra cảnh báo nhất quán
         all_alerts.extend(self.check_consistency_alerts(user_id))
+        
+        # Kiểm tra cảnh báo giấc ngủ
+        all_alerts.extend(self.check_sleep_alerts(user_id))
+        
+        # Kiểm tra cảnh báo nhịp tim
+        all_alerts.extend(self.check_heart_rate_alerts(user_id))
         
         # Sắp xếp theo mức độ ưu tiên
         priority_order = {'critical': 0, 'danger': 1, 'warning': 2, 'info': 3, 'success': 4}
